@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>2.0新增DynamicQuery类 | 忆苦思甜</title>
+    <title>Update Query | 忆苦思甜</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="wz2cool">
     
-    <meta name="description" content="新增加一个DynamicQuery类，类似于tk.mybatis.mapper中的Example，这样我们可以把一些属性封装到一个类中方便以后扩展。 这里目前封装了筛选，排序和一个distinct。123456789101112131415161718192021222324252627282930">
+    <meta name="description" content="项目地址：https://github.com/wz2cool/mybatis-dynamic-query文档地址：https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/
+前言项目中其实有个很大的问题就是对于更新操作，这个问题">
     
     
     
@@ -65,15 +66,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/08/11/preview2DynamicQuery/" title="2.0新增DynamicQuery类" itemprop="url">2.0新增DynamicQuery类</a>
+      <a href="/2021/06/27/updatequery/" title="Update Query" itemprop="url">Update Query</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-08-11T09:51:55.000Z" itemprop="datePublished">2017-08-11</time>
-    更新日期:<time datetime="2019-03-14T14:25:50.359Z" itemprop="dateModified">2019-03-14</time>
+    <time datetime="2021-06-27T03:04:44.000Z" itemprop="datePublished">2021-06-27</time>
+    更新日期:<time datetime="2021-06-27T03:25:27.417Z" itemprop="dateModified">2021-06-27</time>
     
   </p>
 </header>
@@ -82,17 +83,29 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UpdateByUpdateQueryMapper"><span class="toc-number">2.1.</span> <span class="toc-text">UpdateByUpdateQueryMapper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UpdateQuery"><span class="toc-number">2.2.</span> <span class="toc-text">UpdateQuery</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#结束"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li></ol>
 		</div>
 		
-		<p>新增加一个DynamicQuery类，类似于tk.mybatis.mapper中的Example，这样我们可以把一些属性封装到一个类中方便以后扩展。 这里目前封装了筛选，排序和一个distinct。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicQuery</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> distinct;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Class&lt;T&gt; entityClass;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;FilterDescriptorBase&gt; filters = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> List&lt;SortDescriptor&gt; sorts = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DynamicQuery</span><span class="params">(Class&lt;T&gt; entityClass)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.entityClass = entityClass;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Class&lt;T&gt; <span class="title">getEntityClass</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> entityClass;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> FilterDescriptorBase[] getFilters() &#123;</span><br><span class="line">        <span class="keyword">return</span> filters.toArray(<span class="keyword">new</span> FilterDescriptorBase[filters.size()]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> SortDescriptor[] getSorts() &#123;</span><br><span class="line">        <span class="keyword">return</span> sorts.toArray(<span class="keyword">new</span> SortDescriptor[sorts.size()]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addFilter</span><span class="params">(FilterDescriptorBase filter)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.filters.add(filter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeFilter</span><span class="params">(FilterDescriptorBase filter)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.filters.remove(filter);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addSort</span><span class="params">(SortDescriptor sort)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.sorts.add(sort);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">removeSort</span><span class="params">(SortDescriptor sort)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.sorts.remove(sort);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isDistinct</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> distinct;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDistinct</span><span class="params">(<span class="keyword">boolean</span> distinct)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.distinct = distinct;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+		<p>项目地址：<a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="external">https://github.com/wz2cool/mybatis-dynamic-query</a><br>文档地址：<a href="https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/" target="_blank" rel="external">https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/</a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>项目中其实有个很大的问题就是对于更新操作，这个问题在 tk.mapper 里面也会有，目前支持的两个更新是根据对象来的两个方法</p>
+<ul>
+<li>update: 方法是全部进行赋值，即使为 null 也赋值为 null</li>
+<li>updateSelective: 方法是如果 null 就忽略，有值才赋值</li>
+</ul>
+<p>大家看到了没，少了一个中间状态，就是说我就想更新里面某几个值，但是 null 我们也想赋值，这个我们发现就不太好弄了，所以我们新增了 UpdateQuery 对象进行处理</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="UpdateByUpdateQueryMapper"><a href="#UpdateByUpdateQueryMapper" class="headerlink" title="UpdateByUpdateQueryMapper"></a>UpdateByUpdateQueryMapper</h2><p>这个就是对应的 Mapper, 里面主要提供了 updateByUpdateQuery 方法，参数为 UpdateQuery 这里不做赘述，并且已经放入 DynamicQueryMapper 里面，所以只要继承了 DynamicQueryMapper 就会默认有 里面主要提供了 updateByUpdateQuery 方法</p>
+<h2 id="UpdateQuery"><a href="#UpdateQuery" class="headerlink" title="UpdateQuery"></a>UpdateQuery</h2><p>这个就是我们的新类，这个新的查询类是集成筛选组的，所以以前的筛选方法都是可以用的，主要添加 set 方法，可以对某个属性进行赋值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testUpdateByUpdateQuery</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    User user = <span class="keyword">new</span> User();</span><br><span class="line">    user.setId(<span class="number">19</span>);</span><br><span class="line">    user.setUsername(<span class="string">"frank19"</span>);</span><br><span class="line">    user.setPassword(<span class="string">"frank"</span>);</span><br><span class="line">    <span class="keyword">int</span> result = userDao.insert(user);</span><br><span class="line">    assertEquals(<span class="number">1</span>, result);</span><br><span class="line">    UpdateQuery&lt;User&gt; userUpdateQuery = UpdateQuery.createQuery(User.class)</span><br><span class="line">            <span class="comment">// 设置有值</span></span><br><span class="line">            .set(User::getUsername, <span class="string">"Marry"</span>)</span><br><span class="line">            <span class="comment">// 设置null</span></span><br><span class="line">            .set(User::getPassword, <span class="keyword">null</span>)</span><br><span class="line">            .and(User::getId, isEqual(<span class="number">19</span>));</span><br><span class="line">    result = userDao.updateByUpdateQuery(userUpdateQuery);</span><br><span class="line">    assertEquals(<span class="number">1</span>, result);</span><br><span class="line">    <span class="keyword">final</span> User user1 = userDao.selectByPrimaryKey(<span class="number">19</span>);</span><br><span class="line">    <span class="comment">// 有值的设置成功更新</span></span><br><span class="line">    assertEquals(<span class="string">"Marry"</span>, user1.getUsername());</span><br><span class="line">    <span class="comment">// 设置为null 也成功</span></span><br><span class="line">    assertNull(user1.getPassword());</span><br><span class="line">    userDao.deleteByPrimaryKey(<span class="number">19</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们同样可以看一下 output 验证</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@1220747354 wrapping conn0: url=jdbc:h2:mem:default user=SA] will not be managed by Spring</span><br><span class="line">==&gt;  Preparing: INSERT INTO users ( id,username,password ) VALUES( ?,?,? )</span><br><span class="line">==&gt; Parameters: 19(Integer), frank19(String), frank(String)</span><br><span class="line">&lt;==    Updates: 1</span><br><span class="line">Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@771db12c]</span><br><span class="line">Creating a new SqlSession</span><br><span class="line">SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@1ba05e38] was not registered <span class="keyword">for</span> synchronization because synchronization is not active</span><br><span class="line">JDBC Connection [HikariProxyConnection@179060558 wrapping conn0: url=jdbc:h2:mem:default user=SA] will not be managed by Spring</span><br><span class="line">==&gt;  Preparing: UPDATE users SET password=?,username=? WHERE (id = ?)</span><br><span class="line">==&gt; Parameters: null, Marry(String), 19(Integer)</span><br><span class="line">&lt;==    Updates: 1</span><br></pre></td></tr></table></figure>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>这样发现这个真的很方便了，完全弥补了 tk.mapper 缺失更新的灵活性</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/MDQ-2-0-杂记/">MDQ 2.0 杂记</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a>
   </div>
 
 
@@ -100,7 +113,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="https://wz2cool.github.io/2017/08/11/preview2DynamicQuery/" data-title="2.0新增DynamicQuery类 | 忆苦思甜" data-tsina="null" class="share clearfix">
+  <div data-url="https://wz2cool.github.io/2021/06/27/updatequery/" data-title="Update Query | 忆苦思甜" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -109,19 +122,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2017/08/15/mdq2-0/" title="mdq2.0">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  mdq2.0</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2017/08/08/preview2Note1/"  title="开始构思2.0">
+<a href="/2020/11/28/mdq3-2/"  title="mybatis-dynamic-query 3.2 更新">
  <strong>NEXT:</strong><br/> 
- <span>开始构思2.0
+ <span>mybatis-dynamic-query 3.2 更新
 </span>
 </a>
 </div>
@@ -157,7 +162,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UpdateByUpdateQueryMapper"><span class="toc-number">2.1.</span> <span class="toc-text">UpdateByUpdateQueryMapper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UpdateQuery"><span class="toc-number">2.2.</span> <span class="toc-text">UpdateQuery</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#结束"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li></ol>
   </div>
 
 <div id="asidepart">
