@@ -4,12 +4,13 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>ts-dynamic-query 入门（一） 基本筛选 | 忆苦思甜</title>
+    <title>MapperBatchAction 批量操作 | 忆苦思甜</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="wz2cool">
     
-    <meta name="description" content="项目地址：https://github.com/wz2cool/ts-dynamic-query">
+    <meta name="description" content="前言批量也是这个框架缺失的，因为没有 spring starter 封装，所以先弄一个帮助性质的方法，其实核心方法就是调用 sqlSession batch 提交，还有需要注意的是查阅文档，批量操作应该只是作用于 insert, update, delete 三个操作。
+使用我们看一下怎么构建 Ma">
     
     
     
@@ -65,15 +66,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2018/10/18/tdy-learning-1/" title="ts-dynamic-query 入门（一） 基本筛选" itemprop="url">ts-dynamic-query 入门（一） 基本筛选</a>
+      <a href="/2021/06/27/batchaction/" title="MapperBatchAction 批量操作" itemprop="url">MapperBatchAction 批量操作</a>
   </h1>
   <p class="article-author">By
     
       <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
     </p>
   <p class="article-time">
-    <time datetime="2018-10-18T06:01:55.000Z" itemprop="datePublished">2018-10-18</time>
-    更新日期:<time datetime="2019-03-14T14:25:50.364Z" itemprop="dateModified">2019-03-14</time>
+    <time datetime="2021-06-27T03:26:58.000Z" itemprop="datePublished">2021-06-27</time>
+    更新日期:<time datetime="2021-06-27T04:02:24.194Z" itemprop="dateModified">2021-06-27</time>
     
   </p>
 </header>
@@ -82,17 +83,22 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">3.</span> <span class="toc-text">小结</span></a></li></ol>
 		</div>
 		
-		<p>项目地址：<a href="https://github.com/wz2cool/ts-dynamic-query" target="_blank" rel="external">https://github.com/wz2cool/ts-dynamic-query</a></p>
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>批量也是这个框架缺失的，因为没有 spring starter 封装，所以先弄一个帮助性质的方法，其实核心方法就是调用 sqlSession batch 提交，<br>还有需要注意的是查阅文档，批量操作应该只是作用于 insert, update, delete 三个操作。</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><p>我们看一下怎么构建 MapperBatchAction</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注入sqlSessionFactory</span></span><br><span class="line"><span class="meta">@Resource</span></span><br><span class="line"><span class="keyword">private</span> SqlSessionFactory sqlSessionFactory;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testBatchInsert</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 不能直接是你用 mapper , 而是使用 mapper 的class 才行， 这里我们设置每次批量是3</span></span><br><span class="line">    MapperBatchAction&lt;BugDao&gt; insertBatchAction = MapperBatchAction.create(BugDao.class, <span class="keyword">this</span>.sqlSessionFactory, <span class="number">3</span>);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">        Bug newBug = <span class="keyword">new</span> Bug();</span><br><span class="line">        newBug.setId(<span class="number">10000</span> + i);</span><br><span class="line">        newBug.setAssignTo(<span class="string">"frank"</span>);</span><br><span class="line">        newBug.setTitle(<span class="string">"title"</span>);</span><br><span class="line">        <span class="comment">// 缓存所有的插入操作,(PS: 当然也可以放入更新操作)</span></span><br><span class="line">        insertBatchAction.addAction((mapper) -&gt; mapper.insertSelective(newBug));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 执行批量操作并返回批量结果</span></span><br><span class="line">    <span class="keyword">final</span> List&lt;BatchResult&gt; batchResults = insertBatchAction.doBatchActions();</span><br><span class="line">    <span class="keyword">int</span> effectRows = batchResults.stream().mapToInt(x -&gt; Arrays.stream(x.getUpdateCounts()).sum()).sum();</span><br><span class="line">    assertEquals(<span class="number">10</span>, effectRows);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看一下返回值确实是 3 个为一批操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@806738808 wrapping conn0: url=jdbc:h2:mem:default user=SA] will not be managed by Spring</span><br><span class="line">==&gt;  Preparing: INSERT INTO bug ( id,title,assignTo ) VALUES( ?,?,? )</span><br><span class="line">==&gt; Parameters: 10000(Integer), title(String), frank(String)</span><br><span class="line">==&gt; Parameters: 10001(Integer), title(String), frank(String)</span><br><span class="line">==&gt; Parameters: 10002(Integer), title(String), frank(String)</span><br><span class="line">==&gt;  Preparing: INSERT INTO bug ( id,title,assignTo ) VALUES( ?,?,? )</span><br><span class="line">==&gt; Parameters: 10003(Integer), title(String), frank(String)</span><br><span class="line">==&gt; Parameters: 10004(Integer), title(String), frank(String)</span><br><span class="line">==&gt; Parameters: 10005(Integer), title(String), frank(String)</span><br><span class="line">==&gt;  Preparing: INSERT INTO bug ( id,title,assignTo ) VALUES( ?,?,? )</span><br><span class="line">==&gt; Parameters: 10006(Integer), title(String), frank(String)</span><br><span class="line">==&gt; Parameters: 10007(Integer), title(String), frank(String)</span><br><span class="line">==&gt; Parameters: 10008(Integer), title(String), frank(String)</span><br><span class="line">==&gt;  Preparing: INSERT INTO bug ( id,title,assignTo ) VALUES( ?,?,? )</span><br><span class="line">==&gt; Parameters: 10009(Integer), title(String), frank(String)</span><br></pre></td></tr></table></figure>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>这里和其他的 mapper 批量操作不一样 ，我们缓存操作会更具有灵活性。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ts-dynamic-query-入门/">ts-dynamic-query 入门</a>
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a><a href="/tags/MDQ/">MDQ</a>
   </div>
 
 
@@ -100,7 +106,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="https://wz2cool.github.io/2018/10/18/tdy-learning-1/" data-title="ts-dynamic-query 入门（一） 基本筛选 | 忆苦思甜" data-tsina="null" class="share clearfix">
+  <div data-url="https://wz2cool.github.io/2021/06/27/batchaction/" data-title="MapperBatchAction 批量操作 | 忆苦思甜" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -109,19 +115,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2018/11/15/mdq2-3/" title="mybatis-dynamic-query 2.0.3 更新">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  mybatis-dynamic-query 2.0.3 更新</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2018/09/15/dynamic-query-desgin/"  title="动态查询设计">
+<a href="/2021/06/27/updatequery/"  title="Update Query">
  <strong>NEXT:</strong><br/> 
- <span>动态查询设计
+ <span>Update Query
 </span>
 </a>
 </div>
@@ -157,7 +155,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#使用"><span class="toc-number">2.</span> <span class="toc-text">使用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">3.</span> <span class="toc-text">小结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
