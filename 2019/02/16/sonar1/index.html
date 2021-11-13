@@ -25,8 +25,10 @@ docker 安装
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -110,7 +112,7 @@ docker 安装
 <li>使用 7.1 版本镜像</li>
 <li>编译社区版本的 branch 插件的 jar 包</li>
 </ol>
-<h3 id="编译-branch-插件"><a href="#编译-branch-插件" class="headerlink" title="编译 branch 插件"></a>编译 branch 插件</h3><p>因为 branch 插件从 sonarqube 的应用市场安装是需要付费的，但是有人弄出来一个社区插件：<a href="https://github.com/msanez/sonar-branch-community" target="_blank" rel="external">https://github.com/msanez/sonar-branch-community</a><br>我们下载下来编译成为 jar 即可，当然我自己也编译好了一份，大家可以方便下载：<a href="https://raw.githubusercontent.com/wz2cool/java-resource/master/jar/sonar-branch-community/2.0/sonar-branch-plugin-2.0.0.jar" target="_blank" rel="external">sonar-branch-plugin-2.0.0.jar</a></p>
+<h3 id="编译-branch-插件"><a href="#编译-branch-插件" class="headerlink" title="编译 branch 插件"></a>编译 branch 插件</h3><p>因为 branch 插件从 sonarqube 的应用市场安装是需要付费的，但是有人弄出来一个社区插件：<a href="https://github.com/msanez/sonar-branch-community" target="_blank" rel="noopener">https://github.com/msanez/sonar-branch-community</a><br>我们下载下来编译成为 jar 即可，当然我自己也编译好了一份，大家可以方便下载：<a href="https://raw.githubusercontent.com/wz2cool/java-resource/master/jar/sonar-branch-community/2.0/sonar-branch-plugin-2.0.0.jar" target="_blank" rel="noopener">sonar-branch-plugin-2.0.0.jar</a></p>
 <h3 id="编写-docker-编排文件"><a href="#编写-docker-编排文件" class="headerlink" title="编写 docker 编排文件"></a>编写 docker 编排文件</h3><p>这里我们要注意我们必须是用的是 7.1 版本，数据库 jdbc 地址用户名密码，根据自己的情况调整。保存文件为 docker-compose.yml</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">'2'</span></span><br><span class="line"></span><br><span class="line">services:</span><br><span class="line">  sonarqube:</span><br><span class="line">    image: sonarqube:<span class="number">7.1</span></span><br><span class="line">    restart: always</span><br><span class="line">    ports:</span><br><span class="line">      - <span class="string">"9000:9000"</span></span><br><span class="line">      - <span class="string">"9092:9092"</span></span><br><span class="line">    environment:</span><br><span class="line">      SONARQUBE_JDBC_USERNAME: $&#123;username&#125;</span><br><span class="line">      SONARQUBE_JDBC_PASSWORD: $&#123;password&#125;</span><br><span class="line">      SONARQUBE_JDBC_URL: jdbc:mysql:<span class="comment">//192.xxx.xxx.xxx/sonarqube</span></span><br></pre></td></tr></table></figure>
 <p>我们保存好 docker-compose.yml 文件后就可以启动了</p>

@@ -22,8 +22,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -86,7 +88,7 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#设计"><span class="toc-number">2.</span> <span class="toc-text">设计</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#上下分页"><span class="toc-number">2.1.</span> <span class="toc-text">上下分页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动回退如果为空"><span class="toc-number">2.2.</span> <span class="toc-text">自动回退如果为空</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#兼容传统分页"><span class="toc-number">2.3.</span> <span class="toc-text">兼容传统分页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.4.</span> <span class="toc-text">小结</span></a></li></ol></li></ol>
 		</div>
 		
-		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="external">mybatis-dynamic-query</a></p>
+		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="noopener">mybatis-dynamic-query</a></p>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们常规分页一般会使用 PageHelper 里面的分页的两次查询问题，这个之前已经在<a href="https://wz2cool.github.io/2020/05/02/logic-paging/">逻辑分页</a>中讲过了，但是逻辑分页的代价又非常大，因为我们需要对排序字段构建一个 PageId 字段用于翻上一页和下一页。 那么有没有中间方案，就是我只是想去掉查询 count 那次查询，还是返回上一页和下一页，那么 NormPagingQuery 就可以做这件事。</p>
 <h1 id="设计"><a href="#设计" class="headerlink" title="设计"></a>设计</h1><h2 id="上下分页"><a href="#上下分页" class="headerlink" title="上下分页"></a>上下分页</h2><p>和逻辑分页一样，我们还是只是告诉有没有上一页和有没有下一页，这样我们就可以保证不再查询总数来计算页码。 那么如何判断有没有上下页呢</p>
 <ul>
@@ -111,7 +113,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a>
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a>
   </div>
 
 

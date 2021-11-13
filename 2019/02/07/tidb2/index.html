@@ -21,8 +21,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -85,7 +87,7 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#环境准备"><span class="toc-number">2.</span> <span class="toc-text">环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#硬件"><span class="toc-number">2.1.</span> <span class="toc-text">硬件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#虚拟机模板配置"><span class="toc-number">2.2.</span> <span class="toc-text">虚拟机模板配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#网络配置"><span class="toc-number">2.3.</span> <span class="toc-text">网络配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他重要配置"><span class="toc-number">2.4.</span> <span class="toc-text">其他重要配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#修改-hostname"><span class="toc-number">2.4.1.</span> <span class="toc-text">修改 hostname</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭-swap"><span class="toc-number">2.4.2.</span> <span class="toc-text">关闭 swap</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装"><span class="toc-number">3.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#在中控机上安装系统依赖包"><span class="toc-number">3.1.</span> <span class="toc-text">在中控机上安装系统依赖包</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在中控机上创建-tidb-用户，并生成-ssh-key"><span class="toc-number">3.2.</span> <span class="toc-text">在中控机上创建 tidb 用户，并生成 ssh key</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在中控机器上下载-TiDB-Ansible"><span class="toc-number">3.3.</span> <span class="toc-text">在中控机器上下载 TiDB-Ansible</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在中控机器上安装-Ansible-及其依赖"><span class="toc-number">3.4.</span> <span class="toc-text">在中控机器上安装 Ansible 及其依赖</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在中控机上配置部署机器-ssh-互信及-sudo-规则"><span class="toc-number">3.5.</span> <span class="toc-text">在中控机上配置部署机器 ssh 互信及 sudo 规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在部署目标机器上安装-NTP-服务"><span class="toc-number">3.6.</span> <span class="toc-text">在部署目标机器上安装 NTP 服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分配机器资源，编辑-inventory-ini-文件"><span class="toc-number">3.7.</span> <span class="toc-text">分配机器资源，编辑 inventory.ini 文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署任务"><span class="toc-number">3.8.</span> <span class="toc-text">部署任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试集群"><span class="toc-number">3.9.</span> <span class="toc-text">测试集群</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如果对 TiDB 一无所知同学可以简单看一下 <a href="https://wz2cool.github.io/2019/02/07/tidb1/">TiDB 简介</a>。<br>如果对 TiDB 只是想简单看一下的效果，对性能无要求的，可以参考官网 <a href="https://www.pingcap.com/docs-cn/op-guide/docker-compose/" target="_blank" rel="external">Docker Compose 快速构建集群</a>, 三个命令即可。<br>这一次我们要用到其推荐的方式进行搭建，对机器硬件是有所要求的。当然我自己也是穷啊，所以也只是用了一台二手服务器进行搭建, 和官网推荐配置差距很多。</p>
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如果对 TiDB 一无所知同学可以简单看一下 <a href="https://wz2cool.github.io/2019/02/07/tidb1/">TiDB 简介</a>。<br>如果对 TiDB 只是想简单看一下的效果，对性能无要求的，可以参考官网 <a href="https://www.pingcap.com/docs-cn/op-guide/docker-compose/" target="_blank" rel="noopener">Docker Compose 快速构建集群</a>, 三个命令即可。<br>这一次我们要用到其推荐的方式进行搭建，对机器硬件是有所要求的。当然我自己也是穷啊，所以也只是用了一台二手服务器进行搭建, 和官网推荐配置差距很多。</p>
 <h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><h2 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h2><ul>
 <li>CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）</li>
 <li>内存：64G DDR3 1333MHz</li>
@@ -96,7 +98,7 @@
 <h2 id="虚拟机模板配置"><a href="#虚拟机模板配置" class="headerlink" title="虚拟机模板配置"></a>虚拟机模板配置</h2><p>虚拟机有器好处，就是我们可以通过模板进行快速复制部署，这里我设置了两个模板：</p>
 <ul>
 <li>tidb_template 这里设置磁盘大小为 16G</li>
-<li>tikv_template 这里设置磁盘大小为 50G<br>这里曾经有个坑就是，TiKV 存储满了，我不知道如何扩展（待处理），所以对 TiKV 单独建立了一个 50G 大容量模板<br>下载 ova： <a href="https://pan.baidu.com/s/1_4IQqaSz1XrgqVUZCyP1pg" target="_blank" rel="external">tidb_template</a> , <a href="https://pan.baidu.com/s/1E8NuJW2zSTEziNp44UM-0A" target="_blank" rel="external">tikv_temlate</a></li>
+<li>tikv_template 这里设置磁盘大小为 50G<br>这里曾经有个坑就是，TiKV 存储满了，我不知道如何扩展（待处理），所以对 TiKV 单独建立了一个 50G 大容量模板<br>下载 ova： <a href="https://pan.baidu.com/s/1_4IQqaSz1XrgqVUZCyP1pg" target="_blank" rel="noopener">tidb_template</a> , <a href="https://pan.baidu.com/s/1E8NuJW2zSTEziNp44UM-0A" target="_blank" rel="noopener">tikv_temlate</a></li>
 </ul>
 <table>
 <thead>
@@ -265,9 +267,9 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mysql -u root -h <span class="number">192.168</span>.13.157 -P <span class="number">4000</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>通过浏览器访问监控平台。<br>地址：<a href="http://192.168.13.158:3000" target="_blank" rel="external">http://192.168.13.158:3000</a> 默认帐号密码是：admin/admin</li>
+<li>通过浏览器访问监控平台。<br>地址：<a href="http://192.168.13.158:3000" target="_blank" rel="noopener">http://192.168.13.158:3000</a> 默认帐号密码是：admin/admin</li>
 </ul>
-<p>参考：<br><a href="https://www.pingcap.com/docs-cn/op-guide/ansible-deployment/" target="_blank" rel="external">https://www.pingcap.com/docs-cn/op-guide/ansible-deployment/</a></p>
+<p>参考：<br><a href="https://www.pingcap.com/docs-cn/op-guide/ansible-deployment/" target="_blank" rel="noopener">https://www.pingcap.com/docs-cn/op-guide/ansible-deployment/</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">

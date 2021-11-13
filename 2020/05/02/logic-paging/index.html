@@ -24,8 +24,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -89,7 +91,7 @@
 		</div>
 		
 		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这个功能个人觉得是真的是一个非常有意思的功能，主要是为了解决大数据分页的问题。</p>
-<h1 id="分页对比"><a href="#分页对比" class="headerlink" title="分页对比"></a>分页对比</h1><h2 id="传统分页"><a href="#传统分页" class="headerlink" title="传统分页"></a>传统分页</h2><p>比如我们常常用的 <a href="https://github.com/pagehelper/Mybatis-PageHelper" target="_blank" rel="external">PageHelper</a></p>
+<h1 id="分页对比"><a href="#分页对比" class="headerlink" title="分页对比"></a>分页对比</h1><h2 id="传统分页"><a href="#传统分页" class="headerlink" title="传统分页"></a>传统分页</h2><p>比如我们常常用的 <a href="https://github.com/pagehelper/Mybatis-PageHelper" target="_blank" rel="noopener">PageHelper</a></p>
 <p>传统分页实际上是查询 2 次，输入参数为 pageNum, pageSize<br>一般第一个查询为</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> $&#123;tableName&#125; <span class="keyword">LIMIT</span> (pageNum <span class="number">-1</span>) * pageSize, pageSize</span><br></pre></td></tr></table></figure>
 <p>第二个查询实际上是算总数(totalCount)</p>
@@ -97,7 +99,7 @@
 <p>当有了 pageNum, pageSize, totalCount, 我们就可以简答算出相关的分页信息<br>pageNum<br>pageSize<br>totalCount<br>totalPage = Math.ceiling(totalCount / pageSize)</p>
 <p>分页逻辑看似没什么问题，但是当遇到海量数据的时候会出现两个性能问题</p>
 <ol>
-<li><p>注意第一查询， 中 <code>LIMIT ${offset}, ${pageSize}</code>， 当 offset 越大的时候整个查询会越来越慢 参考：<a href="https://blog.csdn.net/fengzongfu/article/details/103191867" target="_blank" rel="external">分页场景（limit,offset）为什么会慢？</a></p>
+<li><p>注意第一查询， 中 <code>LIMIT ${offset}, ${pageSize}</code>， 当 offset 越大的时候整个查询会越来越慢 参考：<a href="https://blog.csdn.net/fengzongfu/article/details/103191867" target="_blank" rel="noopener">分页场景（limit,offset）为什么会慢？</a></p>
 </li>
 <li><p>注意第二个查询算总数，也是会因为数据量越来越大而越来越慢</p>
 </li>
@@ -110,10 +112,10 @@
 </ul>
 <p>有了上面两个理论基础，我们假设一个场景：我们有 9 名学生，每个学生有自己的 id 和名字， 我们分页查询，每页 5 条数据<br>首先我们多查一条数据，那么就是说我们要查 6 条， 然后 6 &gt; 5 我们就知道有下一页了<br>这里我们要记录一下这个窗口的分页 id (startPageId: 1, endPageId: 5), pageId 是为了记录位置</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`student`</span> <span class="keyword">LIMIT</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<p><a href="https://sbimg.cn/image/moNYY" target="_blank" rel="external"><img src="https://wx1.sbimg.cn/2020/05/02/logic1.md.png" alt="logic1.md.png"></a></p>
+<p><a href="https://sbimg.cn/image/moNYY" target="_blank" rel="noopener"><img src="https://wx1.sbimg.cn/2020/05/02/logic1.md.png" alt="logic1.md.png"></a></p>
 <p>再比如我们再翻页, 其实我们后面只有 4 名学生了， 4 &lt; 5 我们就知道没有下一页了<br>这里我们也要记录一下这个结果集的分页 id (startPageId: 6, endPageId: 9), pageId 是为了记录位置</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 这里的5 是上一次endPageId</span></span><br><span class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="string">`student`</span> <span class="keyword">WHERE</span> <span class="keyword">ID</span> &gt; <span class="number">5</span> <span class="keyword">Limit</span> <span class="number">6</span></span><br></pre></td></tr></table></figure>
-<p><a href="https://sbimg.cn/image/moHYo" target="_blank" rel="external"><img src="https://wx1.sbimg.cn/2020/05/02/logic2.md.png" alt="logic2.md.png"></a></p>
+<p><a href="https://sbimg.cn/image/moHYo" target="_blank" rel="noopener"><img src="https://wx1.sbimg.cn/2020/05/02/logic2.md.png" alt="logic2.md.png"></a></p>
 <p>好了大家已经能看到优势了对吧，一般来说 id 是有索引的，这样避免了 offset 过大导致语句慢，还有就是其实这里用多查一条来代替查询 count</p>
 <h2 id="在框架中应用"><a href="#在框架中应用" class="headerlink" title="在框架中应用"></a>在框架中应用</h2><p>这里面我们需要使用一个新的 LogicPagingQuery, 专门来做逻辑分页，注意逻辑分页是不允许非 PageId 字段进行排序的，因为我们需要根据这个逻辑的分页 ID 来进行记录位置</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testLogicPaging1</span><span class="params">()</span> <span class="keyword">throws</span> JsonProcessingException </span>&#123;</span><br><span class="line">    <span class="comment">// 用 student 表中的id 作为分页id，升序并且向下翻页</span></span><br><span class="line">    LogicPagingQuery&lt;StudentDO&gt; logicPagingQuery =</span><br><span class="line">            LogicPagingQuery.createQuery(StudentDO.class, StudentDO::getId, SortDirection.ASC, UpDown.DOWN);</span><br><span class="line">    logicPagingQuery.setPageSize(<span class="number">5</span>);</span><br><span class="line">    LogicPagingResult&lt;StudentDO&gt; result = studentMapper.selectByLogicPaging(logicPagingQuery);</span><br><span class="line">    ObjectMapper objectMapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">    String jsonStr = objectMapper.writeValueAsString(result);</span><br><span class="line">    System.out.println(jsonStr);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -129,7 +131,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/MDQ/">MDQ</a>
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a><a href="/tags/MDQ/">MDQ</a>
   </div>
 
 

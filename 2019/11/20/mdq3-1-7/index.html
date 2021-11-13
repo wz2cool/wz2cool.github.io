@@ -23,8 +23,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -87,7 +89,7 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更新内容"><span class="toc-number">2.</span> <span class="toc-text">更新内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selectFirstByDynamicQuery"><span class="toc-number">2.1.</span> <span class="toc-text">selectFirstByDynamicQuery</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#selectMaxByDynamicQuery"><span class="toc-number">2.2.</span> <span class="toc-text">selectMaxByDynamicQuery</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#selectMinByDynamicQuery"><span class="toc-number">2.3.</span> <span class="toc-text">selectMinByDynamicQuery</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">3.</span> <span class="toc-text">小结</span></a></li></ol>
 		</div>
 		
-		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="external">mybatis-dynamic-query</a></p>
+		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="noopener">mybatis-dynamic-query</a></p>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>更新版本到 3.1.7，这次主要是一个小版本的更新，加了三个比较有用的方法，selectFirstByDynamicQuery, selectMaxByDynamicQuery, selectMinByDynamicQuery</p>
 <h1 id="更新内容"><a href="#更新内容" class="headerlink" title="更新内容"></a>更新内容</h1><h2 id="selectFirstByDynamicQuery"><a href="#selectFirstByDynamicQuery" class="headerlink" title="selectFirstByDynamicQuery"></a>selectFirstByDynamicQuery</h2><p>选择第一个, 这个和 selectOne 要区别开来，selectOne 是有且只有个一个，多了要报错，selectFirst 是你有多个也没关系，但是我只取第一个</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    DynamicQuery&lt;ProductsDO&gt; query = DynamicQuery.createQuery(ProductsDO.class)</span><br><span class="line">            .and(ProductsDO::getId, greaterThan(<span class="number">2</span>))</span><br><span class="line">            .orderBy(ProductsDO::getId, asc());</span><br><span class="line">    <span class="comment">// 因为过滤掉了2 ， 再按照id 升序，那么第二个id值一定是3</span></span><br><span class="line">    Optional&lt;ProductsDO&gt; productsDOOptional = productMapper.selectFirstByDynamicQuery(query);</span><br><span class="line">    Assert.assertTrue(productsDOOptional.isPresent());</span><br><span class="line">    Integer expectedValue = <span class="number">3</span>;</span><br><span class="line">    Integer actualValue = productsDOOptional.get().getId();</span><br><span class="line">    Assert.assertEquals(expectedValue, actualValue);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -106,7 +108,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/MDQ/">MDQ</a>
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a><a href="/tags/MDQ/">MDQ</a>
   </div>
 
 

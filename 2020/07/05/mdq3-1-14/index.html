@@ -22,8 +22,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -86,7 +88,7 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#更新内容"><span class="toc-number">2.</span> <span class="toc-text">更新内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#selectSumByDynamicQuery"><span class="toc-number">2.1.</span> <span class="toc-text">selectSumByDynamicQuery</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#越界处理"><span class="toc-number">2.1.1.</span> <span class="toc-text">越界处理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#selectAvgByDynamicQuery"><span class="toc-number">2.2.</span> <span class="toc-text">selectAvgByDynamicQuery</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#失精度处理"><span class="toc-number">2.2.1.</span> <span class="toc-text">失精度处理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-number">3.</span> <span class="toc-text">小结</span></a></li></ol>
 		</div>
 		
-		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="external">mybatis-dynamic-query</a></p>
+		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="noopener">mybatis-dynamic-query</a></p>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>更新版本到 3.1.14， 距离上次 3.1.7 又花了半年年，期间有种种客观原因，可能因为工作上的事情太忙，有些偷懒了，除了之前聊到的逻辑分页，这次在上个版本基础加上两个聚合函数 selectSumByDynamicQuery, selectAvgByDynamicQuery</p>
 <h1 id="更新内容"><a href="#更新内容" class="headerlink" title="更新内容"></a>更新内容</h1><h2 id="selectSumByDynamicQuery"><a href="#selectSumByDynamicQuery" class="headerlink" title="selectSumByDynamicQuery"></a>selectSumByDynamicQuery</h2><p>对某个列进行 sum 操作。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testSelectSum</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    DynamicQuery&lt;Product&gt; query1 = DynamicQuery.createQuery(Product.class);</span><br><span class="line">    Optional&lt;BigDecimal&gt; sumOptional = productDao.selectSumByDynamicQuery(Product::getPrice, query1);</span><br><span class="line">    BigDecimal sum = sumOptional.get();</span><br><span class="line">    <span class="comment">// 为了验证sum 对不对 我们把所有数据拿出来在内存sum 一下</span></span><br><span class="line">    List&lt;Product&gt; productList = productDao.selectAll();</span><br><span class="line">    BigDecimal expectedValue = <span class="keyword">new</span> BigDecimal(productList.stream().mapToDouble(x -&gt; x.getPrice().doubleValue()).sum());</span><br><span class="line">    assertEquals(<span class="number">0</span>, expectedValue.compareTo(sum));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -123,7 +125,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a>
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a>
   </div>
 
 

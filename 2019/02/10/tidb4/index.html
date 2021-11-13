@@ -21,8 +21,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -86,7 +88,7 @@
 		</div>
 		
 		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前面三章基本把 TiDB 的环境弄好了，也做了一下简单测试，有兴趣的同学可以看一下：<br><a href="https://wz2cool.github.io/2019/02/07/tidb1/">TiDB 入门（一）：TiDB 简介</a><br><a href="https://wz2cool.github.io/2019/02/07/tidb2/">TiDB 入门（二）：虚拟机搭建 TiDB-Ansible 部署方案</a><br><a href="https://wz2cool.github.io/2019/02/07/tidb3/">TiDB 入门（三）：简单测试</a><br>本来还有一些用 jmeter 压力测试的，后来测试的结果非常不好，就不想写出来了，因为自己毕竟是用虚拟机模拟的和 TiDB 官网推荐的配置差很多，如果自己写出来是有失偏颇的。</p>
-<h1 id="为何“跑路”"><a href="#为何“跑路”" class="headerlink" title="为何“跑路”"></a>为何“跑路”</h1><h2 id="穷"><a href="#穷" class="headerlink" title="穷"></a>穷</h2><p>我们可以看到，TiDB 对性能要求特别高，简单看一下配置。参考：<a href="https://www.pingcap.com/docs-cn/op-guide/recommendation/" target="_blank" rel="external">软硬件要求</a></p>
+<h1 id="为何“跑路”"><a href="#为何“跑路”" class="headerlink" title="为何“跑路”"></a>为何“跑路”</h1><h2 id="穷"><a href="#穷" class="headerlink" title="穷"></a>穷</h2><p>我们可以看到，TiDB 对性能要求特别高，简单看一下配置。参考：<a href="https://www.pingcap.com/docs-cn/op-guide/recommendation/" target="_blank" rel="noopener">软硬件要求</a></p>
 <p>开发测试环境:</p>
 <table>
 <thead>
@@ -175,7 +177,7 @@
 </table>
 <p>开发环境大概就需要两台 DELL 服务器才能满足 CPU 和内存的要求。<br>并且最贵的应该是 SSD，因为是需要服务器级别的 SSD 所以会非常贵。如果要高可用 raid 5 磁盘序列需要再乘以 3 倍。<br>而生产环境感觉需要六台 DELL 服务器才能满足，大概是开发环境的 3 倍要求。</p>
 <h2 id="用不到"><a href="#用不到" class="headerlink" title="用不到"></a>用不到</h2><p>我们之前也简单测试过，以我那台虚拟机搭建的 TiDB 只有在数据量千万级别才会和 MySQL 的性能相当，<br>我好好回顾了一下自己公司用的表大小，过百万的都非常少，其实 MySQL 完全够用, 现在完全没有足够的理由去说服公司去使用 TiDB。</p>
-<p>再次翻开<a href="https://pingcap.com/blog-cn/how-to-use-tidb/" target="_blank" rel="external">TiDB 正确使用姿势</a>, 结尾的一句话好好记住：<br><em><b>如果整篇文章你只想记住一句话，那就是数据条数少于 5000w 的场景下通常用不到 TiDB，TiDB 是为大规模的数据场景设计的。<br>如果还想记住一句话，那就是单机 MySQL 能满足的场景也用不到 TiDB。</b></em></p>
+<p>再次翻开<a href="https://pingcap.com/blog-cn/how-to-use-tidb/" target="_blank" rel="noopener">TiDB 正确使用姿势</a>, 结尾的一句话好好记住：<br><em><b>如果整篇文章你只想记住一句话，那就是数据条数少于 5000w 的场景下通常用不到 TiDB，TiDB 是为大规模的数据场景设计的。<br>如果还想记住一句话，那就是单机 MySQL 能满足的场景也用不到 TiDB。</b></em></p>
 <h1 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h1><p>当然这次“跑路”并不是永远放弃 TiDB，等单表业务需求到了 5000w 以上的时候，我们不能用 MySQL 解决问题的时候，我相信 TiDB 仍然是值得用的，因为 MySQL 做扩展的能力没有 TiDB 好，用现在一句流行的话来说，能用钱搞定的就不是问题，性能达到瓶颈，我用机器性能去堆就可以了。</p>
 <p>当然以后还是会持续学习 TiDB 的，希望有一天能够用上。</p>
   

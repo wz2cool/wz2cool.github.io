@@ -22,8 +22,10 @@ virualbox clone之前我们安装的一台虚拟机，我们现在就可以clone
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -89,51 +91,45 @@ virualbox clone之前我们安装的一台虚拟机，我们现在就可以clone
 		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为了学习otter，上一篇我们讲到了 otter 必要软件的安装，参考：<a href="https://wz2cool.github.io/2017/11/01/vm-net-hostonly/">virualbox 安装 otter 必备软件</a>，现在安装otter，相比官方文档，我们尽量简化安装步骤。     </p>
 <h1 id="virualbox-clone"><a href="#virualbox-clone" class="headerlink" title="virualbox clone"></a>virualbox clone</h1><p>之前我们安装的一台虚拟机，我们现在就可以clone 一台出来。这样我们把一台当做manager， 另外一台当做node。</p>
 <h2 id="网络链接"><a href="#网络链接" class="headerlink" title="网络链接"></a>网络链接</h2><p>同样参照之前 <a href="https://wz2cool.github.io/2017/11/01/vm-net-hostonly/#配置网络">virualbox 配置网络</a>，确保NAT，和host-only 网卡正常工作。</p>
-<h1 id="manager-安装"><a href="#manager-安装" class="headerlink" title="manager 安装"></a>manager 安装</h1><h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>先到我们第一台虚拟机，我们定义它为manager虚拟机。前面我们已经装好了mysql了，现在就可以用到了，这里我是用工具跑的，不是用命令跑的。直接点开在浏览器打开：<a href="https://raw.githubusercontent.com/alibaba/otter/master/manager/deployer/src/main/resources/sql/otter-manager-schema.sql" target="_blank" rel="external">https://raw.githubusercontent.com/alibaba/otter/master/manager/deployer/src/main/resources/sql/otter-manager-schema.sql</a><br>然后打开我们IDE， 复制sql 代到IDE，然后在最上面加上 <code>SET sql_mode = &#39;&#39;;</code><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/runsql.png" alt=""></p>
+<h1 id="manager-安装"><a href="#manager-安装" class="headerlink" title="manager 安装"></a>manager 安装</h1><h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>先到我们第一台虚拟机，我们定义它为manager虚拟机。前面我们已经装好了mysql了，现在就可以用到了，这里我是用工具跑的，不是用命令跑的。直接点开在浏览器打开：<a href="https://raw.githubusercontent.com/alibaba/otter/master/manager/deployer/src/main/resources/sql/otter-manager-schema.sql" target="_blank" rel="noopener">https://raw.githubusercontent.com/alibaba/otter/master/manager/deployer/src/main/resources/sql/otter-manager-schema.sql</a><br>然后打开我们IDE， 复制sql 代到IDE，然后在最上面加上 <code>SET sql_mode = &#39;&#39;;</code><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/runsql.png" alt></p>
 <h2 id="启动步骤"><a href="#启动步骤" class="headerlink" title="启动步骤"></a>启动步骤</h2><ol>
-<li>直接去<a href="https://github.com/alibaba/otter/releases" target="_blank" rel="external">https://github.com/alibaba/otter/releases</a> 下载编译好的文件。<br>这里我们使用的是<br><code>$ wget https://github.com/alibaba/otter/releases/download/v4.2.14/manager.deployer-4.2.14.tar.gz</code></li>
+<li>直接去<a href="https://github.com/alibaba/otter/releases" target="_blank" rel="noopener">https://github.com/alibaba/otter/releases</a> 下载编译好的文件。<br>这里我们使用的是<br><code>$ wget https://github.com/alibaba/otter/releases/download/v4.2.14/manager.deployer-4.2.14.tar.gz</code></li>
 <li>解压缩<br><code>$ mkdir /tmp/manager</code><br><code>$ tar zxvf manager.deployer-4.2.14.tar.gz  -C /tmp/manager</code>  </li>
-<li>配置修改<br>把 127.0.0.1 改成当前虚拟机内网host-only ip, 这里我的ip 为 192.168.56.101.<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managerOtterconfig.png" alt=""></li>
+<li>配置修改<br>把 127.0.0.1 改成当前虚拟机内网host-only ip, 这里我的ip 为 192.168.56.101.<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managerOtterconfig.png" alt></li>
 <li>准备启动<br><code>$ ./bin/startup.sh</code></li>
-<li><p>查看日志<br><code>$ vim logs/manager.log</code>  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2013-08-14 13:19:45.911 [] WARN  com.alibaba.otter.manager.deployer.JettyEmbedServer - ##Jetty Embed Server is startup!   </span><br><span class="line">2013-08-14 13:19:45.911 [] WARN  com.alibaba.otter.manager.deployer.OtterManagerLauncher - ## the manager server is running now ......</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>验证<br>打开：<a href="http://192.168.56.101:8080/" target="_blank" rel="external">http://192.168.56.101:8080/</a>   （我自己manager ip 为192.168.56.101）<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managerUI.png" alt=""><br>初始密码为: admin/admin</p>
-</li>
+<li>查看日志<br><code>$ vim logs/manager.log</code>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2013-08-14 13:19:45.911 [] WARN  com.alibaba.otter.manager.deployer.JettyEmbedServer - ##Jetty Embed Server is startup!   </span><br><span class="line">2013-08-14 13:19:45.911 [] WARN  com.alibaba.otter.manager.deployer.OtterManagerLauncher - ## the manager server is running now ......</span><br></pre></td></tr></table></figure></li>
+<li>验证<br>打开：<a href="http://192.168.56.101:8080/" target="_blank" rel="noopener">http://192.168.56.101:8080/</a>   （我自己manager ip 为192.168.56.101）<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managerUI.png" alt><br>初始密码为: admin/admin</li>
 </ol>
 <h1 id="node"><a href="#node" class="headerlink" title="node"></a>node</h1><h2 id="环境准备-1"><a href="#环境准备-1" class="headerlink" title="环境准备"></a>环境准备</h2><ol>
-<li>安装完成 manager，添加一个zookeeper 集群，zookeeper 虚拟机安装过了。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/zoomanager.png" alt="">  </li>
-<li>在manager 中添加一个node，为的是产生一个唯一id，<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodemanage.png" alt=""><br>添加完成<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodeid.png" alt="">    </li>
+<li>安装完成 manager，添加一个zookeeper 集群，zookeeper 虚拟机安装过了。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/zoomanager.png" alt>  </li>
+<li>在manager 中添加一个node，为的是产生一个唯一id，<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodemanage.png" alt><br>添加完成<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodeid.png" alt>    </li>
 </ol>
 <h2 id="启动步骤-1"><a href="#启动步骤-1" class="headerlink" title="启动步骤"></a>启动步骤</h2><ol>
-<li>下载otter node, 可访问：<a href="https://github.com/alibaba/otter/releases" target="_blank" rel="external">https://github.com/alibaba/otter/releases</a> ，这里我们直接用最新的。<br><code>$ wget https://github.com/alibaba/otter/releases/download/v4.2.14/node.deployer-4.2.14.tar.gz</code></li>
+<li>下载otter node, 可访问：<a href="https://github.com/alibaba/otter/releases" target="_blank" rel="noopener">https://github.com/alibaba/otter/releases</a> ，这里我们直接用最新的。<br><code>$ wget https://github.com/alibaba/otter/releases/download/v4.2.14/node.deployer-4.2.14.tar.gz</code></li>
 <li>解压缩<br><code>$ mkdir /tmp/node</code><br><code>$ tar zxvf node.deployer-4.2.14.tar.gz  -C /tmp/node</code>   </li>
-<li>配置修改<br>a. 把nid 写入进去<br><code>$ cd /tmp/node</code><br><code>$ echo 1 &gt; conf/nid</code><br>b. 修改otter.properies<br>基本上什么都不用改，只需填写manager地址要改otter.manager.address=192.168.56.101:1099<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodeconfig.png" alt="">  </li>
+<li>配置修改<br>a. 把nid 写入进去<br><code>$ cd /tmp/node</code><br><code>$ echo 1 &gt; conf/nid</code><br>b. 修改otter.properies<br>基本上什么都不用改，只需填写manager地址要改otter.manager.address=192.168.56.101:1099<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodeconfig.png" alt>  </li>
 <li>启动<br><code>$ ./bin/startup.sh</code></li>
-<li><p>查看日志<br><code>$ vim logs/node/node.log</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize=128m; support was removed in 8.0</span><br><span class="line">2017-11-01 06:21:54.027 [main] INFO  com.alibaba.otter.node.deployer.OtterLauncher - INFO ## the otter server is running now ......</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>验证<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/noderun.png" alt=""> </p>
-</li>
+<li>查看日志<br><code>$ vim logs/node/node.log</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Java HotSpot(TM) 64-Bit Server VM warning: ignoring option MaxPermSize&#x3D;128m; support was removed in 8.0</span><br><span class="line">2017-11-01 06:21:54.027 [main] INFO  com.alibaba.otter.node.deployer.OtterLauncher - INFO ## the otter server is running now ......</span><br></pre></td></tr></table></figure></li>
+<li>验证<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/noderun.png" alt> </li>
 </ol>
-<h1 id="操作演示"><a href="#操作演示" class="headerlink" title="操作演示"></a>操作演示</h1><h2 id="建表"><a href="#建表" class="headerlink" title="建表"></a>建表</h2><p>manager 和 node 数据库都跑这个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE `test`;</span><br><span class="line">CREATE TABLE  `test`.`example` (</span><br><span class="line">  `id` int(11)  NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `name` varchar(32) COLLATE utf8_bin DEFAULT NULL ,</span><br><span class="line">   PRIMARY KEY (`ID`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8;</span><br></pre></td></tr></table></figure></p>
+<h1 id="操作演示"><a href="#操作演示" class="headerlink" title="操作演示"></a>操作演示</h1><h2 id="建表"><a href="#建表" class="headerlink" title="建表"></a>建表</h2><p>manager 和 node 数据库都跑这个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE DATABASE &#96;test&#96;;</span><br><span class="line">CREATE TABLE  &#96;test&#96;.&#96;example&#96; (</span><br><span class="line">  &#96;id&#96; int(11)  NOT NULL AUTO_INCREMENT,</span><br><span class="line">  &#96;name&#96; varchar(32) COLLATE utf8_bin DEFAULT NULL ,</span><br><span class="line">   PRIMARY KEY (&#96;ID&#96;)</span><br><span class="line">) ENGINE&#x3D;InnoDB DEFAULT CHARSET&#x3D;utf8;</span><br></pre></td></tr></table></figure></p>
 <h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ol>
-<li>添加 canal<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addcanal.png" alt=""> </li>
-<li>添加数据源 managedb，然后点击验证数据源，这里编码是UTF-8,这个地方是个有个坑的，但是我们已经在之前的必要安装里面设置过了mysql默认编码为UTF-8。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managedb.png" alt=""> </li>
-<li>再添加一个node1db.<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodedb.png" alt=""> </li>
-<li>添加数据表<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managetable.png" alt=""><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodetable.png" alt=""> </li>
-<li>添加channel<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addchannel.png" alt=""> </li>
-<li>添加Pipeline<br>这里需要点击一下 channel 的名字<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/clickChannel.png" alt=""><br>添加一下<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/pipline.png" alt="">  </li>
-<li>添加映射关系<br>首先需要点击一下 pipeline 的名字<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/createtableMapping.png" alt=""><br>到这里就是很简单的选择，源数据表选择managedb中 test数据库的exmple表，目标数据表选择node1db 中的example 表。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/tablemapping.png" alt="">  </li>
-<li>执行channel<br>回到channl 管理点击启用按钮。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/runchanenl.png" alt=""> </li>
+<li>添加 canal<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addcanal.png" alt> </li>
+<li>添加数据源 managedb，然后点击验证数据源，这里编码是UTF-8,这个地方是个有个坑的，但是我们已经在之前的必要安装里面设置过了mysql默认编码为UTF-8。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managedb.png" alt> </li>
+<li>再添加一个node1db.<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodedb.png" alt> </li>
+<li>添加数据表<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/managetable.png" alt><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nodetable.png" alt> </li>
+<li>添加channel<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addchannel.png" alt> </li>
+<li>添加Pipeline<br>这里需要点击一下 channel 的名字<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/clickChannel.png" alt><br>添加一下<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/pipline.png" alt>  </li>
+<li>添加映射关系<br>首先需要点击一下 pipeline 的名字<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/createtableMapping.png" alt><br>到这里就是很简单的选择，源数据表选择managedb中 test数据库的exmple表，目标数据表选择node1db 中的example 表。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/tablemapping.png" alt>  </li>
+<li>执行channel<br>回到channl 管理点击启用按钮。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/runchanenl.png" alt> </li>
 </ol>
 <h1 id="最终验证"><a href="#最终验证" class="headerlink" title="最终验证"></a>最终验证</h1><p>你在mangerdb 中任何改动都会同步到node上，  </p>
 <ol>
-<li>添加数据<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/result.png" alt=""> </li>
-<li>添加一列<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addcolumn.png" alt=""> </li>
+<li>添加数据<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/result.png" alt> </li>
+<li>添加一列<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addcolumn.png" alt> </li>
 </ol>
 <h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>终于把otter 入门测试环境搭建好了，里面省去教程很多不必要步骤，而且还提醒大家在搭建时候遇到的坑，希望大家喜欢，有任何问题欢迎指教。  </p>
-<p>参考：<a href="https://github.com/alibaba/otter/wiki/QuickStart" target="_blank" rel="external">https://github.com/alibaba/otter/wiki/QuickStart</a></p>
+<p>参考：<a href="https://github.com/alibaba/otter/wiki/QuickStart" target="_blank" rel="noopener">https://github.com/alibaba/otter/wiki/QuickStart</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">

@@ -22,8 +22,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -86,11 +88,11 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#安装"><span class="toc-number">2.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-Java-8"><span class="toc-number">2.1.</span> <span class="toc-text">安装 Java 8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安装-jmeter"><span class="toc-number">2.2.</span> <span class="toc-text">安装 jmeter</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>jmeter 是一个 apache 组织的免费测试工具，我们可以比较简单的做一些测试, 因为自己要做 TiDB 的接口性能测试，所以需要把 jmeter 安装到 Centos7 上。<br><a href="http://jmeter.apache.org/index.html" target="_blank" rel="external">jmeter 官网</a></p>
-<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装-Java-8"><a href="#安装-Java-8" class="headerlink" title="安装 Java 8"></a>安装 Java 8</h2><p>为了保险我没用用 openJDK 我安装的是 Oracle JDK 8 的版本， 大家可以去 Oracle 官网下载 <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="external">rpm 安装包</a>。</p>
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>jmeter 是一个 apache 组织的免费测试工具，我们可以比较简单的做一些测试, 因为自己要做 TiDB 的接口性能测试，所以需要把 jmeter 安装到 Centos7 上。<br><a href="http://jmeter.apache.org/index.html" target="_blank" rel="noopener">jmeter 官网</a></p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><h2 id="安装-Java-8"><a href="#安装-Java-8" class="headerlink" title="安装 Java 8"></a>安装 Java 8</h2><p>为了保险我没用用 openJDK 我安装的是 Oracle JDK 8 的版本， 大家可以去 Oracle 官网下载 <a href="https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html" target="_blank" rel="noopener">rpm 安装包</a>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ yum localinstall jdk-<span class="number">8</span>u201-linux-x64.rpm</span><br><span class="line">$ java -version</span><br></pre></td></tr></table></figure>
 <h2 id="安装-jmeter"><a href="#安装-jmeter" class="headerlink" title="安装 jmeter"></a>安装 jmeter</h2><ul>
-<li>从官网下载 3.3 版本： <a href="https://archive.apache.org/dist/jmeter/binaries/" target="_blank" rel="external">https://archive.apache.org/dist/jmeter/binaries/</a><br><b>注：</b>这里非常不建议下载最新 5.0 版本，因为会在分布式那边遇到 SSL 问题。</li>
+<li>从官网下载 3.3 版本： <a href="https://archive.apache.org/dist/jmeter/binaries/" target="_blank" rel="noopener">https://archive.apache.org/dist/jmeter/binaries/</a><br><b>注：</b>这里非常不建议下载最新 5.0 版本，因为会在分布式那边遇到 SSL 问题。</li>
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ wget https:<span class="comment">//archive.apache.org/dist/jmeter/binaries/apache-jmeter-3.3.tgz</span></span><br><span class="line">$ tar -xvf apache-jmeter-<span class="number">3.3</span>.tgz</span><br><span class="line">$ mv apache-jmeter-<span class="number">3.3</span>.tgz jmeter</span><br><span class="line">$ mv jmeter /usr/local</span><br></pre></td></tr></table></figure>
 <ul>

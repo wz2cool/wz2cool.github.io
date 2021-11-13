@@ -22,8 +22,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -86,7 +88,7 @@
 		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#杂谈"><span class="toc-number">1.</span> <span class="toc-text">杂谈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-更新"><span class="toc-number">2.</span> <span class="toc-text">2.3 更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#选择字段查询"><span class="toc-number">2.1.</span> <span class="toc-text">选择字段查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#链式调用"><span class="toc-number">2.2.</span> <span class="toc-text">链式调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结束"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#关注-我"><span class="toc-number">4.</span> <span class="toc-text">关注@我　</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文章整合"><span class="toc-number">5.</span> <span class="toc-text">文章整合</span></a></li></ol>
 		</div>
 		
-		<p>项目地址：<a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="external">https://github.com/wz2cool/mybatis-dynamic-query</a><br>文档地址：<a href="https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/" target="_blank" rel="external">https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/</a></p>
+		<p>项目地址：<a href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="noopener">https://github.com/wz2cool/mybatis-dynamic-query</a><br>文档地址：<a href="https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/" target="_blank" rel="noopener">https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/</a></p>
 <h2 id="杂谈"><a href="#杂谈" class="headerlink" title="杂谈"></a>杂谈</h2><p>前段时间一直忙项目，而且一直在用 typescript 写动态查询，结果一看 java 版本已经一年没有更新了，感觉要加点东西了。</p>
 <h2 id="2-3-更新"><a href="#2-3-更新" class="headerlink" title="2.3 更新"></a>2.3 更新</h2><p>更新了两点：</p>
 <ol>
@@ -116,7 +118,7 @@
 <p>看一下输出结果和用 new FilterDescriptor，new SortDesciptor 效果是一样的, 并且在价格一样的时候，ID 是倒叙排列的。</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT product_id AS product_id, price AS price, product_name AS product_name FROM product WHERE (price &gt; ?) ORDER BY price DESC, product_id DESC LIMIT 100</span><br><span class="line">==&gt; Parameters: 16(Integer)</span><br><span class="line">&lt;==    Columns: PRODUCT_ID, PRICE, PRODUCT_NAME</span><br><span class="line">&lt;==        Row: 1, 18.0000, Northwind Traders Chai</span><br><span class="line">&lt;==        Row: 4, 16.5000, Northwind Traders Olive Oil</span><br><span class="line">&lt;==        Row: 3, 16.5000, Northwind Traders Cajun Seasoning</span><br><span class="line">&lt;==      Total: 3</span><br></pre></td></tr></table></figure>
 <h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>时隔一年已经在项目中一直使用，感觉还是蛮顺手的，希望大家能支持一下。</p>
-<h2 id="关注-我"><a href="#关注-我" class="headerlink" title="关注@我　"></a>关注@我　</h2><p>最后大家可以关注我和 Mybatis-Dynamic-query 项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub" target="_blank" rel="external">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query" data-size="large" data-show-count="true" aria-label="Star wz2cool/mybatis-dynamic-query on GitHub" target="_blank" rel="external">Star</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query/fork" data-size="large" data-show-count="true" aria-label="Fork wz2cool/mybatis-dynamic-query on GitHub" target="_blank" rel="external">Fork</a></p>
+<h2 id="关注-我"><a href="#关注-我" class="headerlink" title="关注@我　"></a>关注@我　</h2><p>最后大家可以关注我和 Mybatis-Dynamic-query 项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" target="_blank" rel="noopener" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query" target="_blank" rel="noopener" data-size="large" data-show-count="true" aria-label="Star wz2cool/mybatis-dynamic-query on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query/fork" target="_blank" rel="noopener" data-size="large" data-show-count="true" aria-label="Fork wz2cool/mybatis-dynamic-query on GitHub">Fork</a></p>
 <h2 id="文章整合"><a href="#文章整合" class="headerlink" title="文章整合"></a>文章整合</h2><p><a href="https://wz2cool.github.io/2017/07/25/filterBase/">Mybatis Dynamic Query 简单筛选</a><br><a href="https://wz2cool.github.io/2017/07/28/groupFilter/">Mybatis Dynamic Query 组筛选</a><br><a href="https://wz2cool.github.io/2017/07/28/sort/">Mybatis Dynamic Query 排序</a><br><a href="https://wz2cool.github.io/2017/07/28/filterSort/">Mybatis Dynamic Query 筛选+排序</a><br><a href="https://wz2cool.github.io/2017/07/28/insert/">Mybatis Dynamic Query 插入</a><br><a href="https://wz2cool.github.io/2017/07/31/update/">Mybatis Dynamic Query 更新</a><br><a href="https://wz2cool.github.io/2017/07/31/delete/">Mybatis Dynamic Query 删除</a><br><a href="https://wz2cool.github.io/2017/07/31/propertyExpression/">Mybatis Dynamic Query 属性表达式</a><br><a href="https://wz2cool.github.io/2017/07/31/joinView/">Mybatis Dynamic Query join 视图</a><br><a href="https://wz2cool.github.io/2017/08/15/howToUse2/">Mybatis Dynamic Query 2.0 入门</a></p>
   
 	</div>
@@ -124,7 +126,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/java/">java</a><a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/MDQ/">MDQ</a>
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a><a href="/tags/MDQ/">MDQ</a>
   </div>
 
 

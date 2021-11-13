@@ -23,8 +23,10 @@
     <link rel="apple-touch-icon" href="/img/pacman.jpg">
     <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
     
-    <link rel="stylesheet" href="/css/style.css">
-</head>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.1"></head>
 
   <body>
     <header>
@@ -87,7 +89,7 @@
 		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#简介"><span class="toc-number">2.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分布测试基本要求"><span class="toc-number">2.1.</span> <span class="toc-text">分布测试基本要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结构图"><span class="toc-number">2.2.</span> <span class="toc-text">结构图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#机器配置"><span class="toc-number">2.3.</span> <span class="toc-text">机器配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#步骤"><span class="toc-number">3.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#slave-配置"><span class="toc-number">3.1.</span> <span class="toc-text">slave 配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#master-配置"><span class="toc-number">3.2.</span> <span class="toc-text">master 配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#测试"><span class="toc-number">4.</span> <span class="toc-text">测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#运行"><span class="toc-number">4.1.</span> <span class="toc-text">运行</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#结果"><span class="toc-number">4.2.</span> <span class="toc-text">结果</span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当单机测试有局限的时候，我们需要用多台机器来做测试。 <a href="http://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html" target="_blank" rel="external">jmeter 分布式</a><br>当然我们需要用到之前已经安装好的系统 <a href="https://wz2cool.github.io/2019/02/09/jmeter1/">Centos7 安装 jmeter</a>,<br>这里再次提醒大家使用 jmeter 版本是 <code>3.3</code>，重要的事情说三遍。</p>
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>当单机测试有局限的时候，我们需要用多台机器来做测试。 <a href="http://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html" target="_blank" rel="noopener">jmeter 分布式</a><br>当然我们需要用到之前已经安装好的系统 <a href="https://wz2cool.github.io/2019/02/09/jmeter1/">Centos7 安装 jmeter</a>,<br>这里再次提醒大家使用 jmeter 版本是 <code>3.3</code>，重要的事情说三遍。</p>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="分布测试基本要求"><a href="#分布测试基本要求" class="headerlink" title="分布测试基本要求"></a>分布测试基本要求</h2><ul>
 <li>所有系统上的防火墙需要关闭，并且对应的端口必须是开放的。</li>
 <li>所有机器必须在同一子网段上。比如 一台机器用 192.x.x.x 那么另外的机器必须也是 192.x.x.x。</li>
@@ -152,7 +154,7 @@
 <ul>
 <li>在 master 看到汇聚后的结果<br>给了 500 线程，但是我们可以看到统计结果是两台的合并 1000。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/jmeter_master_1.png" alt="jmeter_master_1"><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/jmeter_master_2.png" alt="jmeter_master_2"></li>
 </ul>
-<p>参考：<br><a href="https://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html" target="_blank" rel="external">https://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html</a></p>
+<p>参考：<br><a href="https://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html" target="_blank" rel="noopener">https://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
