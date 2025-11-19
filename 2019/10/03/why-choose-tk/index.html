@@ -89,9 +89,9 @@
 		</div>
 		
 		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>mybaits-dynamic-query 到了第三个大版本了，之前一直没有讲为什么我在 2.0 集成了 tk.mapper, 这里也和大家聊聊原因吧。</p>
-<h2 id="专注查询"><a href="#专注查询" class="headerlink" title="专注查询"></a>专注查询</h2><p>在第一版本中，我其实常规的增删改都是自己弄得，还不知道 tk.mapper 和 myabtis-plus, <a href="https://www.cnblogs.com/wz2cool/p/7268428.html" target="_blank" rel="noopener">看我动态查询第一帖</a>, 但是这有个问题就是可能并没有别人做的好，比如 tk.mapper 或者是 mybatis-plus, 选择与其中一个集成是一个非常好的方案，这样可以省时间，而且这两个插件非常优秀。</p>
+<h2 id="专注查询"><a href="#专注查询" class="headerlink" title="专注查询"></a>专注查询</h2><p>在第一版本中，我其实常规的增删改都是自己弄得，还不知道 tk.mapper 和 myabtis-plus, <a href="https://www.cnblogs.com/wz2cool/p/7268428.html">看我动态查询第一帖</a>, 但是这有个问题就是可能并没有别人做的好，比如 tk.mapper 或者是 mybatis-plus, 选择与其中一个集成是一个非常好的方案，这样可以省时间，而且这两个插件非常优秀。</p>
 <h2 id="license-问题"><a href="#license-问题" class="headerlink" title="license 问题"></a>license 问题</h2><p>让位选择 tk.mapper 第一个主要原因就是 license 问题， tk.mapper 的是 MIT 协议，而 mybatis-plus 是 apache 协议， tk.mapper 比起来更加开放，因为不想有任何侵权嫌疑，所以 tk.mapper 非常友好。</p>
-<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>mybatis-plus 是一个全方位的，重量型产品，也就是说你要的基本他都有，防 sql 注入防火墙，分页，自动生成工具，也有动态查询（既生瑜何生亮！！！），而 tk.mapper 非常轻量，并且提供了扩展的 mapper，DynamicQueryMapper 也是扩展于此， 并且作者也有 PageHelper 插件可以集成，至于 sql 防火墙，我们用的是 druid 连接池也有这个功能，所以大概可以这样看 mybatis-plus = tk.mapper + PageHelper + druid + mybatis-dynamic-query, 但是自己还是比较喜欢轻量可扩展的。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>mybatis-plus 是一个全方位的，重量型产品，也就是说你要的基本他都有，防 sql 注入防火墙，分页，自动生成工具，也有动态查询（既生瑜何生亮！！！），而 tk.mapper 非常轻量，并且提供了扩展的 mapper，DynamicQueryMapper 也是扩展于此， 并且作者也有 PageHelper 插件可以集成，至于 sql 防火墙，我们用的是 druid 连接池也有这个功能，所以大概可以这样看 mybatis-plus &#x3D; tk.mapper + PageHelper + druid + mybatis-dynamic-query, 但是自己还是比较喜欢轻量可扩展的。</p>
 <h2 id="良性竞争"><a href="#良性竞争" class="headerlink" title="良性竞争"></a>良性竞争</h2><p>适合才是最好的，大家可以自行对比两家阵营的产品，选择自己喜欢的，都非常不错，做动态查询这个项目也是自己业余时间喜欢，并且真正用在我们自己项目中了。</p>
   
 	</div>

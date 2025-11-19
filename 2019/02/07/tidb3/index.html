@@ -100,23 +100,26 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <li>固态：120GB * 3 (非服务器 SSD)</li>
 </ul>
 <h2 id="MySQL-单例"><a href="#MySQL-单例" class="headerlink" title="MySQL 单例"></a>MySQL 单例</h2><p>配置暂时缺失…</p>
-<h1 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h1><h2 id="下载测试数据"><a href="#下载测试数据" class="headerlink" title="下载测试数据"></a>下载测试数据</h2><p>所有数据均来自于 <a href="https://archive.org/details/stackexchange" target="_blank" rel="noopener">Stack Exchange Data Dump</a>。<br>当然下载的数据都是 xml 格式，方便大家使用，已经转化成 MySQL 能使用的 sql 文件了。</p>
+<h1 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h1><h2 id="下载测试数据"><a href="#下载测试数据" class="headerlink" title="下载测试数据"></a>下载测试数据</h2><p>所有数据均来自于 <a href="https://archive.org/details/stackexchange">Stack Exchange Data Dump</a>。<br>当然下载的数据都是 xml 格式，方便大家使用，已经转化成 MySQL 能使用的 sql 文件了。</p>
 <p>下载：</p>
 <ul>
-<li>小数据：<a href="https://pan.baidu.com/s/1kTom0Eaq4iH_fM9m_22sZA" target="_blank" rel="noopener">math_stackchange</a></li>
-<li>大数据：<a href="https://pan.baidu.com/s/1ClLttJBnvrDaen1qcjteiQ" target="_blank" rel="noopener">stackoverflow</a></li>
+<li>小数据：<a href="https://pan.baidu.com/s/1kTom0Eaq4iH_fM9m_22sZA">math_stackchange</a></li>
+<li>大数据：<a href="https://pan.baidu.com/s/1ClLttJBnvrDaen1qcjteiQ">stackoverflow</a></li>
 </ul>
 <h2 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h2><p>把对应的数据库建立好，导入数据即可。由于数据大概有 15G 左右，导入时间过长，可以看部电影耐性等待。<br><b>注：</b>导入数据到 TiDB 集群明显比传统 MySQL 数据库慢，这里我暂时还没有找到原因。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mysql -uroot -h192<span class="number">.168</span><span class="number">.13</span><span class="number">.157</span> -P <span class="number">4000</span> math_stackexchange &lt; math_stackexchange.sql</span><br><span class="line">$ mysql -uroot -h192<span class="number">.168</span><span class="number">.13</span><span class="number">.157</span> -P <span class="number">4000</span> stackoverflow &lt; stackoverflow.sql</span><br></pre></td></tr></table></figure>
+
 <p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/stackexchange_data.png" alt="stackexchange_data"></p>
 <h1 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h1><h2 id="测试表信息"><a href="#测试表信息" class="headerlink" title="测试表信息"></a>测试表信息</h2><ul>
 <li>comments 表</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `comments` (</span><br><span class="line">	`Id` BIGINT(<span class="number">20</span>) NOT NULL AUTO_INCREMENT,</span><br><span class="line">	`PostId` BIGINT(<span class="number">20</span>) NULL DEFAULT NULL,</span><br><span class="line">	`Score` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`Text` TEXT NULL,</span><br><span class="line">	`CreationDate` DATETIME NULL DEFAULT NULL,</span><br><span class="line">	`UserId` BIGINT(<span class="number">20</span>) NULL DEFAULT NULL,</span><br><span class="line">	`UserDisplayName` VARCHAR(<span class="number">100</span>) NULL,</span><br><span class="line">	<span class="function">PRIMARY <span class="title">KEY</span> <span class="params">(`Id`)</span>,</span></span><br><span class="line"><span class="function">	INDEX `CreationDate` <span class="params">(`CreationDate`)</span></span></span><br><span class="line"><span class="function">)</span></span><br><span class="line"><span class="function">COLLATE</span>=<span class="string">'utf8mb4_bin'</span></span><br><span class="line">ENGINE=InnoDB</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `comments` (</span><br><span class="line">	`Id` BIGINT(<span class="number">20</span>) NOT NULL AUTO_INCREMENT,</span><br><span class="line">	`PostId` BIGINT(<span class="number">20</span>) NULL DEFAULT NULL,</span><br><span class="line">	`Score` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`Text` TEXT NULL,</span><br><span class="line">	`CreationDate` DATETIME NULL DEFAULT NULL,</span><br><span class="line">	`UserId` BIGINT(<span class="number">20</span>) NULL DEFAULT NULL,</span><br><span class="line">	`UserDisplayName` VARCHAR(<span class="number">100</span>) NULL,</span><br><span class="line">	PRIMARY <span class="title function_">KEY</span> <span class="params">(`Id`)</span>,</span><br><span class="line">	INDEX `CreationDate` (`CreationDate`)</span><br><span class="line">)</span><br><span class="line">COLLATE=<span class="string">&#x27;utf8mb4_bin&#x27;</span></span><br><span class="line">ENGINE=InnoDB</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>users 表</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `users` (</span><br><span class="line">	`Id` BIGINT(<span class="number">20</span>) NOT NULL AUTO_INCREMENT,</span><br><span class="line">	`Reputation` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`CreationDate` DATETIME NULL DEFAULT NULL,</span><br><span class="line">	`DisplayName` VARCHAR(<span class="number">100</span>) NULL,</span><br><span class="line">	`LastAccessDate` DATETIME NULL DEFAULT NULL,</span><br><span class="line">	`WebsiteUrl` VARCHAR(<span class="number">255</span>) NULL,</span><br><span class="line">	`Location` VARCHAR(<span class="number">100</span>) NULL,</span><br><span class="line">	`AboutMe` TEXT NULL,</span><br><span class="line">	`Views` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`UpVotes` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`DownVotes` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`AccountId` BIGINT(<span class="number">20</span>) NULL DEFAULT NULL,</span><br><span class="line">	`ProfileImageUrl` VARCHAR(<span class="number">255</span>) NULL,</span><br><span class="line">	<span class="function">PRIMARY <span class="title">KEY</span> <span class="params">(`Id`)</span>,</span></span><br><span class="line"><span class="function">	INDEX `CreationDate` <span class="params">(`CreationDate`)</span></span></span><br><span class="line"><span class="function">)</span></span><br><span class="line"><span class="function">COLLATE</span>=<span class="string">'utf8mb4_bin'</span></span><br><span class="line">ENGINE=InnoDB</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `users` (</span><br><span class="line">	`Id` BIGINT(<span class="number">20</span>) NOT NULL AUTO_INCREMENT,</span><br><span class="line">	`Reputation` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`CreationDate` DATETIME NULL DEFAULT NULL,</span><br><span class="line">	`DisplayName` VARCHAR(<span class="number">100</span>) NULL,</span><br><span class="line">	`LastAccessDate` DATETIME NULL DEFAULT NULL,</span><br><span class="line">	`WebsiteUrl` VARCHAR(<span class="number">255</span>) NULL,</span><br><span class="line">	`Location` VARCHAR(<span class="number">100</span>) NULL,</span><br><span class="line">	`AboutMe` TEXT NULL,</span><br><span class="line">	`Views` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`UpVotes` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`DownVotes` INT(<span class="number">11</span>) NULL DEFAULT NULL,</span><br><span class="line">	`AccountId` BIGINT(<span class="number">20</span>) NULL DEFAULT NULL,</span><br><span class="line">	`ProfileImageUrl` VARCHAR(<span class="number">255</span>) NULL,</span><br><span class="line">	PRIMARY <span class="title function_">KEY</span> <span class="params">(`Id`)</span>,</span><br><span class="line">	INDEX `CreationDate` (`CreationDate`)</span><br><span class="line">)</span><br><span class="line">COLLATE=<span class="string">&#x27;utf8mb4_bin&#x27;</span></span><br><span class="line">ENGINE=InnoDB</span><br><span class="line">;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <table>
 <thead>
 <tr>
@@ -126,8 +129,7 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <th>量级</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>math_stackexchange</td>
 <td>users</td>
 <td>497023</td>
@@ -151,9 +153,9 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <td>60915000</td>
 <td>5 千万级别</td>
 </tr>
-</tbody>
-</table>
-<h2 id="单表查询"><a href="#单表查询" class="headerlink" title="单表查询"></a>单表查询</h2><h3 id="单表-Count"><a href="#单表-Count" class="headerlink" title="单表 Count"></a>单表 Count</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">$ SELECT <span class="title">COUNT</span><span class="params">(<span class="number">0</span>)</span> FROM [表名]</span></span><br></pre></td></tr></table></figure>
+</tbody></table>
+<h2 id="单表查询"><a href="#单表查询" class="headerlink" title="单表查询"></a>单表查询</h2><h3 id="单表-Count"><a href="#单表-Count" class="headerlink" title="单表 Count"></a>单表 Count</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ SELECT <span class="title function_">COUNT</span><span class="params">(<span class="number">0</span>)</span> FROM [表名]</span><br></pre></td></tr></table></figure>
+
 <table>
 <thead>
 <tr>
@@ -162,8 +164,7 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <th>TiDB</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>math_stackexchange.users</td>
 <td>0.234 sec</td>
 <td>0.359 sec</td>
@@ -183,10 +184,10 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <td>15.359 sec</td>
 <td>4.922 sec</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/tidb_single_select_count.png" alt="tidb_single_select_count"></p>
-<h3 id="带索引"><a href="#带索引" class="headerlink" title="带索引"></a>带索引</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from [表名] where CreationDate &gt; '2017-01-01'</span></span><br></pre></td></tr></table></figure>
+<h3 id="带索引"><a href="#带索引" class="headerlink" title="带索引"></a>带索引</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from [表名] where CreationDate &gt; <span class="string">&#x27;2017-01-01&#x27;</span></span><br></pre></td></tr></table></figure>
+
 <table>
 <thead>
 <tr>
@@ -195,8 +196,7 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <th>TiDB</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>math_stackexchange.users</td>
 <td>0.063 sec</td>
 <td>0.219 sec</td>
@@ -216,10 +216,10 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <td>2.891 sec</td>
 <td>1.437 sec</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/tidb_single_select_count2.png" alt="tidb_single_select_count2"></p>
-<h3 id="无索引"><a href="#无索引" class="headerlink" title="无索引"></a>无索引</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from math_stackexchange.users where views &gt; 10</span></span><br><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from math_stackexchange.comments where score &gt; 3</span></span><br><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from stackoverflow.users where views &gt; 10</span></span><br><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from stackoverflow.comments where score &gt; 3</span></span><br></pre></td></tr></table></figure>
+<h3 id="无索引"><a href="#无索引" class="headerlink" title="无索引"></a>无索引</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from math_stackexchange.users where views &gt; <span class="number">10</span></span><br><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from math_stackexchange.comments where score &gt; <span class="number">3</span></span><br><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from stackoverflow.users where views &gt; <span class="number">10</span></span><br><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from stackoverflow.comments where score &gt; <span class="number">3</span></span><br></pre></td></tr></table></figure>
+
 <table>
 <thead>
 <tr>
@@ -228,8 +228,7 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <th>TiDB</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>math_stackexchange.users</td>
 <td>0.203 sec</td>
 <td>0.484 sec</td>
@@ -249,10 +248,10 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <td>61.42 sec</td>
 <td>11.313 sec</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/tidb_single_select_count3.png" alt="tidb_single_select_count3"></p>
-<h2 id="连表查询"><a href="#连表查询" class="headerlink" title="连表查询"></a>连表查询</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from math_stackexchange.comments as a join math_stackexchange.users as b on a.UserId </span>= b.Id where a.CreationDate &gt; <span class="string">'2017-01-01'</span> and  b.views &gt; <span class="number">10</span></span><br><span class="line"><span class="function">$ select <span class="title">count</span><span class="params">(<span class="number">0</span>)</span> from stackoverflow.comments as a join stackoverflow.users as b on a.UserId </span>= b.Id where a.CreationDate &gt; <span class="string">'2017-01-01'</span> and  b.views &gt; <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<h2 id="连表查询"><a href="#连表查询" class="headerlink" title="连表查询"></a>连表查询</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from math_stackexchange.comments as a join math_stackexchange.users as b on a.UserId = b.Id where a.CreationDate &gt; <span class="string">&#x27;2017-01-01&#x27;</span> and  b.views &gt; <span class="number">10</span></span><br><span class="line">$ select <span class="title function_">count</span><span class="params">(<span class="number">0</span>)</span> from stackoverflow.comments as a join stackoverflow.users as b on a.UserId = b.Id where a.CreationDate &gt; <span class="string">&#x27;2017-01-01&#x27;</span> and  b.views &gt; <span class="number">10</span></span><br></pre></td></tr></table></figure>
+
 <table>
 <thead>
 <tr>
@@ -261,8 +260,7 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <th>TiDB</th>
 </tr>
 </thead>
-<tbody>
-<tr>
+<tbody><tr>
 <td>math_stackexchange</td>
 <td>5.297 sec</td>
 <td>4.468 sec</td>
@@ -272,8 +270,7 @@ CPU：Xeon(R) X5650 * 2 （两个物理 CPU，逻辑 24 核）
 <td>180.55 sec</td>
 <td>27.515 sec</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/tidb_single_select_count4.png" alt="tidb_single_select_count4"></p>
 <h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><ol>
 <li>由于硬件所限，无法发挥 TiDB 比较好的性能。</li>
