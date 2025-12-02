@@ -1,0 +1,417 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>初识 tk.mybatis.mapper | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="在博客园发表Mybatis Dynamic Query后，一位园友问我知不知道通用mapper，仔细去找了一下，还真的有啊，比较好的就是abel533写的tk.mybatis.mapper。本次例子地址：https://github.com/wz2cool/tk-mybatis-demo
+传统Myb">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/08/04/tkMapperFirst/" title="初识 tk.mybatis.mapper" itemprop="url">初识 tk.mybatis.mapper</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-08-04T07:23:48.000Z" itemprop="datePublished">2017-08-04</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.592Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9FMybatis%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">传统Mybatis用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-boot"><span class="toc-number">1.1.</span> <span class="toc-text">Spring boot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sql-%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">sql 数据准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#entity"><span class="toc-number">1.3.</span> <span class="toc-text">entity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dao"><span class="toc-number">1.4.</span> <span class="toc-text">Dao</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mapper"><span class="toc-number">1.5.</span> <span class="toc-text">mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%89%AB%E6%8F%8F%E5%8C%85"><span class="toc-number">1.6.</span> <span class="toc-text">设置扫描包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#application-properies"><span class="toc-number">1.7.</span> <span class="toc-text">application.properies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">1.8.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tk-mybatis-mapper-%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">tk.mybatis.mapper 用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%BC%95%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">添加引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E9%80%9A%E7%94%A8mapper"><span class="toc-number">2.2.</span> <span class="toc-text">继承通用mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%B0%83%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">测试调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tk-mybatis-mapper-%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8%E6%84%9F%E5%8F%97"><span class="toc-number">3.</span> <span class="toc-text">tk.mybatis.mapper 初步使用感受</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">3.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%B0%E6%83%91%EF%BC%88%E4%BB%85%E4%BB%A3%E8%A1%A8%E4%B8%AA%E4%BA%BA%E8%A7%82%E7%82%B9%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">困惑（仅代表个人观点）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tk-mybatis-mapper-Criteria-%E7%AD%9B%E9%80%89"><span class="toc-number">4.</span> <span class="toc-text">tk.mybatis.mapper(Criteria) 筛选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">5.</span> <span class="toc-text">结束</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A6%81%E6%9C%89%E8%87%AA%E5%B7%B1%E7%9A%84Mapper"><span class="toc-number">5.1.</span> <span class="toc-text">要有自己的Mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-tk-mybatis-mapper-%E9%97%AE%E9%A2%98"><span class="toc-number">5.2.</span> <span class="toc-text">关于 tk.mybatis.mapper 问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91"><span class="toc-number">6.</span> <span class="toc-text">关注我　##</span></a></li></ol>
+		</div>
+		
+		<p>在博客园发表Mybatis Dynamic Query后，一位园友问我知不知道通用mapper，仔细去找了一下，还真的有啊，比较好的就是abel533写的<a href="https://github.com/abel533/Mapper">tk.mybatis.mapper</a>。<br>本次例子地址：<a href="https://github.com/wz2cool/tk-mybatis-demo">https://github.com/wz2cool/tk-mybatis-demo</a></p>
+<h2 id="传统Mybatis用法"><a href="#传统Mybatis用法" class="headerlink" title="传统Mybatis用法"></a>传统Mybatis用法</h2><h3 id="Spring-boot"><a href="#Spring-boot" class="headerlink" title="Spring boot"></a>Spring boot</h3><p>引用基本的jar到pom</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-test<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.5.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.3.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="sql-数据准备"><a href="#sql-数据准备" class="headerlink" title="sql 数据准备"></a>sql 数据准备</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> category;</span><br><span class="line"><span class="keyword">CREATE TABLE</span> category (</span><br><span class="line">  category_id   <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span>,</span><br><span class="line">  category_name <span class="type">VARCHAR</span> (<span class="number">50</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">  description   <span class="type">VARCHAR</span> (<span class="number">100</span>)</span><br><span class="line">);</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> product;</span><br><span class="line"><span class="keyword">CREATE TABLE</span> product (</span><br><span class="line">  product_id    <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span> auto_increment,</span><br><span class="line">  category_id   <span class="type">INT</span> <span class="keyword">NOT NULL</span>,</span><br><span class="line">  product_name  <span class="type">VARCHAR</span> (<span class="number">50</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">  price         <span class="type">DECIMAL</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> category;</span><br><span class="line"><span class="keyword">INSERT INTO</span> category (category_id, category_name, description) <span class="keyword">VALUES</span></span><br><span class="line">  (<span class="number">1</span>, <span class="string">&#x27;Beverages&#x27;</span>, <span class="string">&#x27;test&#x27;</span>),</span><br><span class="line">  (<span class="number">2</span>, <span class="string">&#x27;Condiments&#x27;</span>, <span class="string">&#x27;test&#x27;</span>),</span><br><span class="line">  (<span class="number">3</span>, <span class="string">&#x27;Oil&#x27;</span>, <span class="string">&#x27;test&#x27;</span>);</span><br><span class="line">  <span class="keyword">DELETE</span> <span class="keyword">FROM</span> product;</span><br><span class="line"><span class="keyword">INSERT INTO</span> product (product_id, category_id, product_name, price) <span class="keyword">VALUES</span></span><br><span class="line">  (<span class="number">1</span>, <span class="number">1</span>, <span class="string">&#x27;Northwind Traders Chai&#x27;</span>, <span class="number">18.0000</span>),</span><br><span class="line">  (<span class="number">2</span>, <span class="number">2</span>, <span class="string">&#x27;Northwind Traders Syrup&#x27;</span>, <span class="number">7.5000</span>),</span><br><span class="line">  (<span class="number">3</span>, <span class="number">2</span>, <span class="string">&#x27;Northwind Traders Cajun Seasoning&#x27;</span>, <span class="number">16.5000</span>),</span><br><span class="line">  (<span class="number">4</span>, <span class="number">3</span>, <span class="string">&#x27;Northwind Traders Olive Oil&#x27;</span>, <span class="number">16.5000</span>),</span><br><span class="line">  (<span class="number">5</span>, <span class="number">3</span>, <span class="string">&#x27;Northwind Traders Olive Oil2&#x27;</span>, <span class="number">16.5000</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="entity"><a href="#entity" class="headerlink" title="entity"></a>entity</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Product</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer productID;</span><br><span class="line">    <span class="keyword">private</span> String productName;</span><br><span class="line">    <span class="keyword">private</span> BigDecimal price;</span><br><span class="line">    <span class="keyword">private</span> Integer categoryID;</span><br><span class="line">    <span class="comment">// get/set...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Table(name = &quot;category&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Category</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;category_id&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer categoryID;</span><br><span class="line">    <span class="keyword">private</span> String categoryName;</span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    <span class="comment">// get /set...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Dao"><a href="#Dao" class="headerlink" title="Dao"></a>Dao</h3><p>这里的ProductDao 是传统的mybatis的用法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">ProductDao</span> &#123;</span><br><span class="line">    List&lt;Product&gt; <span class="title function_">getProducts</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="mapper"><a href="#mapper" class="headerlink" title="mapper"></a>mapper</h3><p>传统mybatis 我们必须有个xml 文件和Dao 对应起来, tk.maybatis.mapper无需此文件。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.github.wz2cool.demo.tk.mybatis.mapper.ProductDao&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getProducts&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.github.wz2cool.demo.tk.mybatis.model.entity.table.Product&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM product</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="设置扫描包"><a href="#设置扫描包" class="headerlink" title="设置扫描包"></a>设置扫描包</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="meta">@MapperScan(basePackages = &quot;com.github.wz2cool.demo.tk.mybatis.mapper&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TestApplication</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        SpringApplication.run(TestApplication.class, args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="application-properies"><a href="#application-properies" class="headerlink" title="application.properies"></a>application.properies</h3><p>注意这里的配置只是针对我们传统mybatis配置，对于tk.maybatis.mapper可以省略这里的配置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mybatis.type-aliases-package=com.github.wz2cool.demo.tk.mybatis.mapper</span><br><span class="line">mybatis.mapper-locations=classpath:com.github.wz2cool.demo.tk.mybatis.mapper/*.xml</span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>我们可以简单调用一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@ContextConfiguration(classes = TestApplication.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ProductDao productDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testSelect</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        List&lt;Product&gt; productList = productDao.getProducts();</span><br><span class="line">        assertEquals(<span class="literal">true</span>, productList.size() &gt; <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以看到输出结果，基本上就通了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT * FROM product </span><br><span class="line">==&gt; Parameters: </span><br><span class="line">&lt;==    Columns: PRODUCT_ID, CATEGORY_ID, PRODUCT_NAME, PRICE</span><br><span class="line">&lt;==        Row: 1, 1, Northwind Traders Chai, 18.0000</span><br><span class="line">&lt;==        Row: 2, 2, Northwind Traders Syrup, 7.5000</span><br><span class="line">&lt;==        Row: 3, 2, Northwind Traders Cajun Seasoning, 16.5000</span><br><span class="line">&lt;==        Row: 4, 3, Northwind Traders Olive Oil, 16.5000</span><br><span class="line">&lt;==        Row: 5, 3, Northwind Traders Olive Oil2, 16.5000</span><br><span class="line">&lt;==      Total: 5</span><br></pre></td></tr></table></figure>
+<h2 id="tk-mybatis-mapper-用法"><a href="#tk-mybatis-mapper-用法" class="headerlink" title="tk.mybatis.mapper 用法"></a>tk.mybatis.mapper 用法</h2><h3 id="添加引用"><a href="#添加引用" class="headerlink" title="添加引用"></a>添加引用</h3><p>需要多添加两个引用 (ps:曾经少了一个mapper-spring-boot-starter,报错死活找不到为什么–!!!)</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>tk.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.4.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--mapper--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>tk.mybatis<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mapper-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="继承通用mapper"><a href="#继承通用mapper" class="headerlink" title="继承通用mapper"></a>继承通用mapper</h3><p>嗯 是的没有xml 文件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">CategoryDao</span> <span class="keyword">extends</span> <span class="title class_">Mapper</span>&lt;Category&gt; &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="测试调用"><a href="#测试调用" class="headerlink" title="测试调用"></a>测试调用</h3><p>dao 里面自带很多方法，比如 selectAll(), insert().</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith(SpringRunner.class)</span></span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="meta">@ContextConfiguration(classes = TestApplication.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SimpleTkMapperTest</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> CategoryDao categoryDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">selectAllTest</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;Category&gt; categories = categoryDao.selectAll();</span><br><span class="line">        assertEquals(<span class="literal">true</span>, categories.size() &gt; <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertTest</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Category</span> <span class="variable">newCategory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Category</span>();</span><br><span class="line">        newCategory.setCategoryID(<span class="number">1000</span>);</span><br><span class="line">        newCategory.setCategoryName(<span class="string">&quot;test&quot;</span>);</span><br><span class="line">        newCategory.setDescription(<span class="string">&quot;for test&quot;</span>);</span><br><span class="line">        <span class="type">int</span> <span class="variable">result</span> <span class="operator">=</span> categoryDao.insert(newCategory);</span><br><span class="line">        assertEquals(<span class="number">1</span>, result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT category_id,category_name,description FROM category </span><br><span class="line">==&gt; Parameters: </span><br><span class="line">&lt;==    Columns: CATEGORY_ID, CATEGORY_NAME, DESCRIPTION</span><br><span class="line">&lt;==        Row: 1, Beverages, <span class="built_in">test</span></span><br><span class="line">&lt;==        Row: 2, Condiments, <span class="built_in">test</span></span><br><span class="line">&lt;==        Row: 3, Oil, <span class="built_in">test</span></span><br><span class="line">&lt;==      Total: 3</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">==&gt;  Preparing: INSERT INTO category ( category_id,category_name,description ) VALUES( ?,?,? ) </span><br><span class="line">==&gt; Parameters: 1000(Integer), <span class="built_in">test</span>(String), <span class="keyword">for</span> <span class="built_in">test</span>(String)</span><br><span class="line">&lt;==    Updates: 1</span><br></pre></td></tr></table></figure>
+<h2 id="tk-mybatis-mapper-初步使用感受"><a href="#tk-mybatis-mapper-初步使用感受" class="headerlink" title="tk.mybatis.mapper 初步使用感受"></a>tk.mybatis.mapper 初步使用感受</h2><h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ol>
+<li>无需xml文件和Dao 对应。</li>
+<li>无需指定xml 文件位置（因为就没有xml文件）。</li>
+<li>自带多种常用方法。</li>
+</ol>
+<h3 id="困惑（仅代表个人观点）"><a href="#困惑（仅代表个人观点）" class="headerlink" title="困惑（仅代表个人观点）"></a>困惑（仅代表个人观点）</h3><ol>
+<li>自带的方法多但是有些方法理解很晦涩，比如 deleteByExample(Object var1)，这里给一个object 我都不知道要填什么，是填写主键呢还是这个实体呢？(后来了解其实example 应该是一个筛选条件)</li>
+</ol>
+<h2 id="tk-mybatis-mapper-Criteria-筛选"><a href="#tk-mybatis-mapper-Criteria-筛选" class="headerlink" title="tk.mybatis.mapper(Criteria) 筛选"></a>tk.mybatis.mapper(Criteria) 筛选</h2><p>在理解Example 以后，就开始了解了 Criteria 筛选，当然Example 还是可以做排序的。<br>来看看 tk.mybatis.mapper 筛选是如何做的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">selectByExampleTest</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">Example</span> <span class="variable">example</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Example</span>(Category.class);</span><br><span class="line">    Example.<span class="type">Criteria</span> <span class="variable">criteria</span> <span class="operator">=</span> example.createCriteria();</span><br><span class="line">    criteria.andEqualTo(<span class="string">&quot;categoryID&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    criteria.orEqualTo(<span class="string">&quot;categoryID&quot;</span>, <span class="number">2</span>);</span><br><span class="line">    categoryDao.selectByExample(example);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT category_id,category_name,description FROM category WHERE ( category_id = ? or category_id = ? ) </span><br><span class="line">==&gt; Parameters: 1(Integer), 2(Integer)</span><br><span class="line">&lt;==    Columns: CATEGORY_ID, CATEGORY_NAME, DESCRIPTION</span><br><span class="line">&lt;==        Row: 1, Beverages, <span class="built_in">test</span></span><br><span class="line">&lt;==        Row: 2, Condiments, <span class="built_in">test</span></span><br><span class="line">&lt;==      Total: 2</span><br></pre></td></tr></table></figure>
+
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>这个只是我初次使用tk.mybatis.mapper 确实不错，可以减少工作量，好像还有可以生成Dao和mapper 的工具，这个我以后再试试看。  </p>
+<h3 id="要有自己的Mapper"><a href="#要有自己的Mapper" class="headerlink" title="要有自己的Mapper"></a>要有自己的Mapper</h3><p>看了 tk.mybatis.mapper 以后，觉得通用mapper 也应该加入到 Mybatis Dynamic Query 中去，当然实现可能有点不一样。</p>
+<h3 id="关于-tk-mybatis-mapper-问题"><a href="#关于-tk-mybatis-mapper-问题" class="headerlink" title="关于 tk.mybatis.mapper 问题"></a>关于 tk.mybatis.mapper 问题</h3><p>这里真的想问问园友了</p>
+<ol>
+<li>tk.mybatis.mapper 支持多表筛选么（join），我自己好像没有找到。</li>
+<li>tk.mybatis.mapper 支持组么，就是类似于 (id &gt; 1 and id &lt; 5) and price &#x3D; 10.</li>
+</ol>
+<h2 id="关注我"><a href="#关注我" class="headerlink" title="关注我　##"></a>关注我　##</h2><p>最后大家可以关注我和 Mybatis-Dynamic-query项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query" data-size="large" data-show-count="true" aria-label="Star wz2cool/mybatis-dynamic-query on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query/fork" data-size="large" data-show-count="true" aria-label="Fork wz2cool/mybatis-dynamic-query on GitHub">Fork</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/tk-mybatis-mapper/">tk.mybatis.mapper</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/08/04/tkMapperFirst/" data-title="初识 tk.mybatis.mapper | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/08/08/preview2Note1/" title="开始构思2.0">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  开始构思2.0</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/07/31/joinView/"  title="Mybatis Dynamic Query join视图">
+ <strong>NEXT:</strong><br/> 
+ <span>Mybatis Dynamic Query join视图
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9FMybatis%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">传统Mybatis用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-boot"><span class="toc-number">1.1.</span> <span class="toc-text">Spring boot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sql-%E6%95%B0%E6%8D%AE%E5%87%86%E5%A4%87"><span class="toc-number">1.2.</span> <span class="toc-text">sql 数据准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#entity"><span class="toc-number">1.3.</span> <span class="toc-text">entity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dao"><span class="toc-number">1.4.</span> <span class="toc-text">Dao</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mapper"><span class="toc-number">1.5.</span> <span class="toc-text">mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E6%89%AB%E6%8F%8F%E5%8C%85"><span class="toc-number">1.6.</span> <span class="toc-text">设置扫描包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#application-properies"><span class="toc-number">1.7.</span> <span class="toc-text">application.properies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95"><span class="toc-number">1.8.</span> <span class="toc-text">测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tk-mybatis-mapper-%E7%94%A8%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">tk.mybatis.mapper 用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%BC%95%E7%94%A8"><span class="toc-number">2.1.</span> <span class="toc-text">添加引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E9%80%9A%E7%94%A8mapper"><span class="toc-number">2.2.</span> <span class="toc-text">继承通用mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%B0%83%E7%94%A8"><span class="toc-number">2.3.</span> <span class="toc-text">测试调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tk-mybatis-mapper-%E5%88%9D%E6%AD%A5%E4%BD%BF%E7%94%A8%E6%84%9F%E5%8F%97"><span class="toc-number">3.</span> <span class="toc-text">tk.mybatis.mapper 初步使用感受</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">3.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%B0%E6%83%91%EF%BC%88%E4%BB%85%E4%BB%A3%E8%A1%A8%E4%B8%AA%E4%BA%BA%E8%A7%82%E7%82%B9%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">困惑（仅代表个人观点）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#tk-mybatis-mapper-Criteria-%E7%AD%9B%E9%80%89"><span class="toc-number">4.</span> <span class="toc-text">tk.mybatis.mapper(Criteria) 筛选</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">5.</span> <span class="toc-text">结束</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A6%81%E6%9C%89%E8%87%AA%E5%B7%B1%E7%9A%84Mapper"><span class="toc-number">5.1.</span> <span class="toc-text">要有自己的Mapper</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E-tk-mybatis-mapper-%E9%97%AE%E9%A2%98"><span class="toc-number">5.2.</span> <span class="toc-text">关于 tk.mybatis.mapper 问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91"><span class="toc-number">6.</span> <span class="toc-text">关注我　##</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

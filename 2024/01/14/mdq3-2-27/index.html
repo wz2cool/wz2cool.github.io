@@ -1,0 +1,398 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>mybatis-dynamic-query 3.2.27 更新 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="项目地址： mybatis-dynamic-query
+更新内容
+自定义站位，目前只针对@View
+添加 last 方法
+
+自定义站位在我们开发过程中往往需要动态注入一些变量就像 mybatis 中的 $ 或者 #，目前支持@View (以后可能支持@Column,目前没找到办法)
+我们先下面例子就">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2024/01/14/mdq3-2-27/" title="mybatis-dynamic-query 3.2.27 更新" itemprop="url">mybatis-dynamic-query 3.2.27 更新</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2024-01-14T06:25:26.000Z" itemprop="datePublished">2024-01-14</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.556Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">更新内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E4%BD%8D"><span class="toc-number">1.1.</span> <span class="toc-text">自定义站位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#last-%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">last 方法</span></a></li></ol></li></ol>
+		</div>
+		
+		<p>项目地址： <a href="https://github.com/wz2cool/mybatis-dynamic-query">mybatis-dynamic-query</a></p>
+<h1 id="更新内容"><a href="#更新内容" class="headerlink" title="更新内容"></a>更新内容</h1><ol>
+<li>自定义站位，目前只针对@View</li>
+<li>添加 last 方法</li>
+</ol>
+<h2 id="自定义站位"><a href="#自定义站位" class="headerlink" title="自定义站位"></a>自定义站位</h2><p>在我们开发过程中往往需要动态注入一些变量就像 mybatis 中的 $ 或者 #，目前支持@View (以后可能支持@Column,目前没找到办法)</p>
+<p>我们先下面例子就是可以动态在@View</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@View(&quot;$&#123;product_table&#125; LEFT JOIN $&#123;category_table&#125; ON $&#123;product_table&#125;.category_id = $&#123;category_table&#125;.category_id&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DynamicProductView</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column(name = &quot;product_id&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long productID;</span><br><span class="line">    <span class="meta">@Column(name = &quot;product_name&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String productName;</span><br><span class="line">    <span class="meta">@Column(name = &quot;price&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> BigDecimal price;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column(name = &quot;category_id&quot;, table = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long categoryID;</span><br><span class="line">    <span class="meta">@Column(name = &quot;category_name&quot;, table = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String categoryName;</span><br><span class="line">    <span class="meta">@Column(name = &quot;description&quot;, table = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    <span class="meta">@Column(name = &quot;description&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String productDescription;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testDynamicProductView</span><span class="params">()</span> &#123;</span><br><span class="line">    DynamicQuery&lt;DynamicProductView&gt; query = DynamicQuery.createQuery(DynamicProductView.class)</span><br><span class="line">        .and(DynamicProductView::getCategoryID, o -&gt; o.greaterThan(<span class="number">1L</span>))</span><br><span class="line">        <span class="comment">// 去替换@View 中的站位的查询参数</span></span><br><span class="line">        .queryParam(<span class="string">&quot;product_table&quot;</span>, <span class="string">&quot;product&quot;</span>)</span><br><span class="line">        .queryParam(<span class="string">&quot;category_table&quot;</span>, <span class="string">&quot;category&quot;</span>);</span><br><span class="line"></span><br><span class="line">    List&lt;DynamicProductView&gt; productViewList = dynamicProductViewMapper.selectByDynamicQuery(query);</span><br><span class="line">    Assert.assertFalse(productViewList.isEmpty());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输出我们可以看到@View中的表名字都被替换了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT product.product_id AS product_id, product.price AS price, category.description AS description, category.category_name AS category_name, product.product_name AS product_name, category.category_id AS category_id, product.description AS product_description FROM product LEFT JOIN category ON product.category_id = category.category_id WHERE (category.category_id &gt; ?)</span><br><span class="line">==&gt; Parameters: 1(Long)</span><br><span class="line">&lt;==    Columns: PRODUCT_ID, PRICE, DESCRIPTION, CATEGORY_NAME, PRODUCT_NAME, CATEGORY_ID, PRODUCT_DESCRIPTION</span><br><span class="line">&lt;==        Row: 2, 9, <span class="built_in">test</span>, Condiments, Northwind Traders Syrup, 2, p2</span><br><span class="line">&lt;==        Row: 3, 16, <span class="built_in">test</span>, Condiments, Northwind Traders Cajun Seasoning, 2, p3</span><br><span class="line">&lt;==        Row: 4, 16, <span class="built_in">test</span>, Oil, Northwind Traders Olive Oil, 3, p4</span><br><span class="line">&lt;==        Row: 5, 16, <span class="built_in">test</span>, Oil, Northwind Traders xxxx Oil, 3, p5</span><br><span class="line">&lt;==      Total: 4</span><br></pre></td></tr></table></figure>
+
+<h2 id="last-方法"><a href="#last-方法" class="headerlink" title="last 方法"></a>last 方法</h2><p>我们知道在mybatis中查询是可以用RowBound进行分页查询，但是我们发现在删除的时候是不好用limit的，这个是mybatis源代码决定他是不可以的，我们看一下源码delete 走的是doUpdate 方法，RowBound 是 default.<br><img src="/mdq3-2-27/1d29367886b60207260e2618fde2abb2.png" alt="Alt text"></p>
+<p>所以为了让Delete 支持这个行为 我们加上last方法 ，注意多次调用last 只会有最后一个last 生效<br>我们简单看一下demo</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testDeleteByDynamicQueryWithLimit</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">    user.setId(<span class="number">20</span>);</span><br><span class="line">    user.setUserName(<span class="string">&quot;frank20&quot;</span>);</span><br><span class="line">    user.setPassword(<span class="string">&quot;frank&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">User</span> <span class="variable">user2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">    user2.setId(<span class="number">21</span>);</span><br><span class="line">    user2.setUserName(<span class="string">&quot;frank21&quot;</span>);</span><br><span class="line">    user2.setPassword(<span class="string">&quot;frank&quot;</span>);</span><br><span class="line"></span><br><span class="line">    userDao.insert(user);</span><br><span class="line">    userDao.insert(user2);</span><br><span class="line"></span><br><span class="line">    DynamicQuery&lt;User&gt; query = DynamicQuery.createQuery(User.class)</span><br><span class="line">            .and(User::getId, o -&gt; o.greaterThanOrEqual(<span class="number">20</span>));</span><br><span class="line">    <span class="type">int</span> <span class="variable">count</span> <span class="operator">=</span> userDao.selectCountByDynamicQuery(query);</span><br><span class="line">    assertEquals(<span class="number">2</span>, count);</span><br><span class="line"></span><br><span class="line">    DynamicQuery&lt;User&gt; deleteQuery = DynamicQuery.createQuery(User.class)</span><br><span class="line">            .and(User::getId, o -&gt; o.greaterThanOrEqual(<span class="number">20</span>))</span><br><span class="line">            <span class="comment">// 可以直接用.last(&quot;limit 1&quot;), 如果想防注入可以这么写</span></span><br><span class="line">            .last(<span class="string">&quot;limit #&#123;number&#125;&quot;</span>)</span><br><span class="line">            .queryParam(<span class="string">&quot;number&quot;</span>, <span class="number">1</span>);</span><br><span class="line">    <span class="type">int</span> <span class="variable">effectRow</span> <span class="operator">=</span> userDao.deleteByDynamicQuery(deleteQuery);</span><br><span class="line">    assertEquals(<span class="number">1</span>, effectRow);</span><br><span class="line">    count = userDao.selectCountByDynamicQuery(query);</span><br><span class="line">    assertEquals(<span class="number">1</span>, count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看一下输出就可以看到 最后Delete有限制limit</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">JDBC Connection [HikariProxyConnection@198250778 wrapping conn0: url=jdbc:h2:mem:default user=SA] will not be managed by Spring</span><br><span class="line">==&gt;  Preparing: DELETE FROM <span class="built_in">users</span> WHERE (<span class="built_in">id</span> &gt;= ?) <span class="built_in">limit</span> ?</span><br><span class="line">==&gt; Parameters: 20(Integer), 1(Integer)</span><br><span class="line">&lt;==    Updates: 1</span><br></pre></td></tr></table></figure>
+
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2024/01/14/mdq3-2-27/" data-title="mybatis-dynamic-query 3.2.27 更新 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2024/05/05/tdq-2-0/" title="ts-dynamic-query 2.0 更新">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  ts-dynamic-query 2.0 更新</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2021/11/13/es-dynamic-query-1/"  title="elasticsearch-dynamic-query 入门">
+ <strong>NEXT:</strong><br/> 
+ <span>elasticsearch-dynamic-query 入门
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E5%86%85%E5%AE%B9"><span class="toc-number">1.</span> <span class="toc-text">更新内容</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AB%99%E4%BD%8D"><span class="toc-number">1.1.</span> <span class="toc-text">自定义站位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#last-%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">last 方法</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

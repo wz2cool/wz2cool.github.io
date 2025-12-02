@@ -1,0 +1,377 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>为何mybatis-dynamic-query 选择tk.mapper集成 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="前言mybaits-dynamic-query 到了第三个大版本了，之前一直没有讲为什么我在 2.0 集成了 tk.mapper, 这里也和大家聊聊原因吧。
+专注查询在第一版本中，我其实常规的增删改都是自己弄得，还不知道 tk.mapper 和 myabtis-plus, 看我动态查询第一帖, 但是">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2019/10/03/why-choose-tk/" title="为何mybatis-dynamic-query 选择tk.mapper集成" itemprop="url">为何mybatis-dynamic-query 选择tk.mapper集成</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2019-10-03T00:14:22.000Z" itemprop="datePublished">2019-10-03</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.602Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E6%B3%A8%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.</span> <span class="toc-text">专注查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#license-%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">license 问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.3.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%89%AF%E6%80%A7%E7%AB%9E%E4%BA%89"><span class="toc-number">1.4.</span> <span class="toc-text">良性竞争</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>mybaits-dynamic-query 到了第三个大版本了，之前一直没有讲为什么我在 2.0 集成了 tk.mapper, 这里也和大家聊聊原因吧。</p>
+<h2 id="专注查询"><a href="#专注查询" class="headerlink" title="专注查询"></a>专注查询</h2><p>在第一版本中，我其实常规的增删改都是自己弄得，还不知道 tk.mapper 和 myabtis-plus, <a href="https://www.cnblogs.com/wz2cool/p/7268428.html">看我动态查询第一帖</a>, 但是这有个问题就是可能并没有别人做的好，比如 tk.mapper 或者是 mybatis-plus, 选择与其中一个集成是一个非常好的方案，这样可以省时间，而且这两个插件非常优秀。</p>
+<h2 id="license-问题"><a href="#license-问题" class="headerlink" title="license 问题"></a>license 问题</h2><p>让位选择 tk.mapper 第一个主要原因就是 license 问题， tk.mapper 的是 MIT 协议，而 mybatis-plus 是 apache 协议， tk.mapper 比起来更加开放，因为不想有任何侵权嫌疑，所以 tk.mapper 非常友好。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>mybatis-plus 是一个全方位的，重量型产品，也就是说你要的基本他都有，防 sql 注入防火墙，分页，自动生成工具，也有动态查询（既生瑜何生亮！！！），而 tk.mapper 非常轻量，并且提供了扩展的 mapper，DynamicQueryMapper 也是扩展于此， 并且作者也有 PageHelper 插件可以集成，至于 sql 防火墙，我们用的是 druid 连接池也有这个功能，所以大概可以这样看 mybatis-plus &#x3D; tk.mapper + PageHelper + druid + mybatis-dynamic-query, 但是自己还是比较喜欢轻量可扩展的。</p>
+<h2 id="良性竞争"><a href="#良性竞争" class="headerlink" title="良性竞争"></a>良性竞争</h2><p>适合才是最好的，大家可以自行对比两家阵营的产品，选择自己喜欢的，都非常不错，做动态查询这个项目也是自己业余时间喜欢，并且真正用在我们自己项目中了。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2019/10/03/why-choose-tk/" data-title="为何mybatis-dynamic-query 选择tk.mapper集成 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2019/10/03/mdq3-1/" title="mybatis-dynamic-query 3.0 更新">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  mybatis-dynamic-query 3.0 更新</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2019/03/18/sonar2/"  title="SonarQube入门（二）：创建项目">
+ <strong>NEXT:</strong><br/> 
+ <span>SonarQube入门（二）：创建项目
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%93%E6%B3%A8%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.</span> <span class="toc-text">专注查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#license-%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">license 问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.3.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%89%AF%E6%80%A7%E7%AB%9E%E4%BA%89"><span class="toc-number">1.4.</span> <span class="toc-text">良性竞争</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

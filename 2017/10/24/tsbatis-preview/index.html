@@ -1,0 +1,449 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>tsbatis-preview | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="前言在发布了 mybatis-dynamic-query之后感觉基本功能稳定了，而且现在在工作项目开发效率大大提高，而且非常易于维护。 最近准备带几个小朋友以前用typescript 打通前后端，当写node写数据库的时候，我就发现非常麻烦，当时就想，为啥js 没有类似于mybatis 框架，然后。">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/10/24/tsbatis-preview/" title="tsbatis-preview" itemprop="url">tsbatis-preview</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-10-24T07:14:20.000Z" itemprop="datePublished">2017-10-24</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.595Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TsBatis"><span class="toc-number">2.</span> <span class="toc-text">TsBatis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Entity"><span class="toc-number">2.1.</span> <span class="toc-text">Entity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TableEntity"><span class="toc-number">2.2.</span> <span class="toc-text">TableEntity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#column"><span class="toc-number">2.3.</span> <span class="toc-text">@column</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RowBounds-%E7%B1%BB"><span class="toc-number">2.4.</span> <span class="toc-text">RowBounds 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PageRowBounds-%E7%B1%BB"><span class="toc-number">2.5.</span> <span class="toc-text">PageRowBounds 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Page"><span class="toc-number">2.6.</span> <span class="toc-text">Page&lt;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ISqlConnection"><span class="toc-number">2.7.</span> <span class="toc-text">ISqlConnection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SqliteConnection"><span class="toc-number">2.8.</span> <span class="toc-text">SqliteConnection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MysqlConnection"><span class="toc-number">2.9.</span> <span class="toc-text">MysqlConnection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseMapper"><span class="toc-number">2.10.</span> <span class="toc-text">BaseMapper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseMybatisMapper"><span class="toc-number">2.11.</span> <span class="toc-text">BaseMybatisMapper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseTableMapper"><span class="toc-number">2.12.</span> <span class="toc-text">BaseTableMapper</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">3.</span> <span class="toc-text">实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseTableMapper%E5%AE%9E%E6%88%98"><span class="toc-number">3.1.</span> <span class="toc-text">BaseTableMapper实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%EF%BC%88inversify%EF%BC%89%E5%AE%9E%E6%88%98"><span class="toc-number">3.2.</span> <span class="toc-text">依赖注入（inversify）实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mybatis-%E9%A3%8E%E6%A0%BC%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.3.</span> <span class="toc-text">mybatis 风格查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5"><span class="toc-number">3.4.</span> <span class="toc-text">分页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">3.5.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91"><span class="toc-number">3.6.</span> <span class="toc-text">关注我　##</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在发布了 <a href="https://github.com/wz2cool/mybatis-dynamic-query">mybatis-dynamic-query</a>之后感觉基本功能稳定了，而且现在在工作项目开发效率大大提高，而且非常易于维护。 最近准备带几个小朋友以前用typescript 打通前后端，当写node写数据库的时候，我就发现非常麻烦，当时就想，为啥js 没有类似于mybatis 框架，然后。。。 就写了tsBatis (typescript + mybatis)<br>项目地址：<a href="https://github.com/wz2cool/tsbatis">https://github.com/wz2cool/tsbatis</a>  </p>
+<h1 id="TsBatis"><a href="#TsBatis" class="headerlink" title="TsBatis"></a>TsBatis</h1><p>tsbatis：诞生的目的是希望把mybatis一些思想借鉴过来（当然现在肯定没mybatis 强大）。<br>typescript：我是蛮反对写普通js 的，我觉得会比较难维护，而且确实带来了惊喜，使用了decorator 类似于java中的aonnotion 才使得这一切成为可能</p>
+<h2 id="Entity"><a href="#Entity" class="headerlink" title="Entity"></a>Entity</h2><p>这里和java(mybatis) 有点不一样，这里的Entity 不是一个注解，而是一个类，主要做一下标示，主要作用于视图</p>
+<h2 id="TableEntity"><a href="#TableEntity" class="headerlink" title="TableEntity"></a>TableEntity</h2><p>这里和java(mybatis) 不一样，java 里面使用的是@Table 注解， 这里是一个虚类继承Entity，必须实现getTableName()方法， 主要作用于表</p>
+<h2 id="column"><a href="#column" class="headerlink" title="@column"></a>@column</h2><p>这是核心注解，里面的参数和mybatis里面@Column注解类似。<br>两种构造：<br>1.表列（只要指定列名和是否是一个key，是否可以插入）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; column, TableEntity &#125; from <span class="string">&quot;../../../src&quot;</span>;</span><br><span class="line">export <span class="keyword">class</span> <span class="title class_">Customer</span> <span class="keyword">extends</span> <span class="title class_">TableEntity</span> &#123;</span><br><span class="line">    <span class="meta">@column(&quot;id&quot;, true, false)</span></span><br><span class="line">    <span class="keyword">public</span> id: number;</span><br><span class="line">    <span class="meta">@column(&quot;compnay&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> company: string;</span><br><span class="line">    <span class="meta">@column(&quot;last_name&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> lastName: string;</span><br><span class="line">    <span class="meta">@column(&quot;first_ame&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> firstName: string;</span><br><span class="line">    <span class="meta">@column(&quot;email_address&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> emailAddress: string;</span><br><span class="line">    <span class="meta">@column(&quot;job_title&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> jobTitle: string;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">getTableName</span><span class="params">()</span>: string &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;customers&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.视图列 （指定列名和表名）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; column, Entity &#125; from <span class="string">&quot;../../../../src&quot;</span>;</span><br><span class="line">export <span class="keyword">class</span> <span class="title class_">NorthwindProductView</span> <span class="keyword">extends</span> <span class="title class_">Entity</span> &#123;</span><br><span class="line">    <span class="meta">@column(&quot;Id&quot;, &quot;Product&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> productId: number;</span><br><span class="line">    <span class="meta">@column(&quot;ProductName&quot;, &quot;Product&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> productName: string;</span><br><span class="line">    <span class="meta">@column(&quot;UnitPrice&quot;, &quot;Product&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> unitPrice: number;</span><br><span class="line">    <span class="meta">@column(&quot;CategoryName&quot;, &quot;Category&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> categoryName: string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="RowBounds-类"><a href="#RowBounds-类" class="headerlink" title="RowBounds 类"></a>RowBounds 类</h2><p>对的，你们没看错，这个就是类似于mybatis 中的 rowBounds, 多的我就不解释了</p>
+<h2 id="PageRowBounds-类"><a href="#PageRowBounds-类" class="headerlink" title="PageRowBounds 类"></a>PageRowBounds 类</h2><p>对的这个同样来自于我们熟悉的abel533 大神写的PageHelper<br>项目地址： <a href="https://github.com/pagehelper/Mybatis-PageHelper">https://github.com/pagehelper/Mybatis-PageHelper</a></p>
+<h2 id="Page"><a href="#Page" class="headerlink" title="Page&lt;&gt;"></a>Page&lt;&gt;</h2><p>我们可以直接使用PageRowRounds，查询返回这个Page，具体可以看实战分页</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">class</span> <span class="title class_">Page</span>&lt;T <span class="keyword">extends</span> <span class="title class_">Entity</span>&gt; &#123;</span><br><span class="line">    <span class="keyword">private</span> pageNum: number;</span><br><span class="line">    <span class="keyword">private</span> pageSize: number;</span><br><span class="line">    <span class="keyword">private</span> total: number;</span><br><span class="line">    <span class="keyword">private</span> pages: number;</span><br><span class="line">    <span class="keyword">private</span> entities: T[];</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ISqlConnection"><a href="#ISqlConnection" class="headerlink" title="ISqlConnection"></a>ISqlConnection</h2><p>确实没有mybatis那么强大驱动，而且js数据库驱动都是来自其他库（千差万别），所以我们可能需要自己实现一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; DatabaseType, Entity, SqlTemplate &#125; from <span class="string">&quot;../model&quot;</span>;</span><br><span class="line">export <span class="keyword">interface</span> <span class="title class_">ISqlConnection</span> &#123;</span><br><span class="line">    getDataBaseType(): DatabaseType;</span><br><span class="line">    run(sql: string, params: any[], callback: (err: any, result?: any) =&gt; <span class="keyword">void</span>);</span><br><span class="line">    runTransaction(sqlTemplates: SqlTemplate[], callback: (err: any, result: any[]) =&gt; <span class="keyword">void</span>);</span><br><span class="line">    select(sql: string, params: any[], callback: (err: any, result: any[]) =&gt; <span class="keyword">void</span>);</span><br><span class="line">    selectCount(sql: string, params: any[], callback: (err: any, result: number) =&gt; <span class="keyword">void</span>);</span><br><span class="line">    selectEntities&lt;T <span class="keyword">extends</span> <span class="title class_">Entity</span>&gt;(</span><br><span class="line">        entityClass: &#123; <span class="keyword">new</span>(): T &#125;,</span><br><span class="line">        sql: string,</span><br><span class="line">        params: any[],</span><br><span class="line">        callback: (err: any, result: T[]) =&gt; <span class="keyword">void</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SqliteConnection"><a href="#SqliteConnection" class="headerlink" title="SqliteConnection"></a>SqliteConnection</h2><p>实现ISqlConnection 接口，是我自己实现的一套sqlite版本主要用于测试。<br>数据库驱动：<a href="https://github.com/mapbox/node-sqlite3">https://github.com/mapbox/node-sqlite3</a>  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="variable">dbPath</span> <span class="operator">=</span> path.join(__dirname, <span class="string">&quot;../../northwind.db&quot;</span>);</span><br><span class="line"> <span class="comment">// 传入到SqliteConnection 构造方法</span></span><br><span class="line"><span class="built_in">this</span>.sqlitedb = <span class="keyword">new</span> <span class="title class_">sqlite3</span>.Database(dbPath);</span><br></pre></td></tr></table></figure>
+
+<h2 id="MysqlConnection"><a href="#MysqlConnection" class="headerlink" title="MysqlConnection"></a>MysqlConnection</h2><p>实现ISqlConnection 接口，mysql 用途广泛，当然要实现一下啦。<br>数据库驱动：<a href="https://github.com/mysqljs/mysql">https://github.com/mysqljs/mysql</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 传入到MysqlConnection 构造方法</span></span><br><span class="line"><span class="type">const</span> <span class="variable">pool</span> <span class="operator">=</span> mysql.createPool(&#123;</span><br><span class="line">    host: <span class="string">&quot;sql12.freemysqlhosting.net&quot;</span>,</span><br><span class="line">    port: <span class="number">3306</span>,</span><br><span class="line">    database: <span class="string">&quot;sql12200910&quot;</span>,</span><br><span class="line">    user: <span class="string">&quot;sql12200910&quot;</span>,</span><br><span class="line">    password: <span class="string">&quot;XXXXXXXXXXXXXXX&quot;</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="BaseMapper"><a href="#BaseMapper" class="headerlink" title="BaseMapper"></a>BaseMapper</h2><p>提供公共方法，直接用纯sql结果。</p>
+<h2 id="BaseMybatisMapper"><a href="#BaseMybatisMapper" class="headerlink" title="BaseMybatisMapper"></a>BaseMybatisMapper</h2><p>继承BaseMapper，提供mybatis风格查询，比如${}和#{}站位</p>
+<h2 id="BaseTableMapper"><a href="#BaseTableMapper" class="headerlink" title="BaseTableMapper"></a>BaseTableMapper</h2><p>继承BaseMybatisMapper，提供基本的CRUD功能，基本上就是通用mapper</p>
+<h1 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h1><h2 id="BaseTableMapper实战"><a href="#BaseTableMapper实战" class="headerlink" title="BaseTableMapper实战"></a>BaseTableMapper实战</h2><p>注：测试都是基于Sqlite<br>1.创建表  </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE TABLE</span> users (</span><br><span class="line">    id          <span class="type">INTEGER</span> <span class="keyword">PRIMARY KEY</span> autoincrement,</span><br><span class="line">    username    <span class="type">VARCHAR</span>(<span class="number">64</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">    password    <span class="type">VARCHAR</span>(<span class="number">64</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>2.创建表实体  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">extends</span> <span class="title class_">TableEntity</span> &#123;</span><br><span class="line">    <span class="meta">@column(&quot;id&quot;, true, false)</span></span><br><span class="line">    <span class="keyword">public</span> id: number;</span><br><span class="line">    <span class="meta">@column(&quot;username&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> username: string;</span><br><span class="line">    <span class="meta">@column(&quot;password&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> password: string;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">getTableName</span><span class="params">()</span>: string &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;users&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3.创建UserMapper  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">class</span> <span class="title class_">UserMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseTableMapper</span>&lt;User&gt; &#123;</span><br><span class="line">    constructor(sqlConnection: ISqlConnection) &#123;</span><br><span class="line">        <span class="built_in">super</span>(sqlConnection);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里需要返回这个User， 因为你懂的，typescript 泛型是编译的，</span></span><br><span class="line">    <span class="comment">// 那个泛型T是拿不到什么东西的</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">getEntityClass</span><span class="params">()</span>: <span class="keyword">new</span> () =&gt; User &#123;</span><br><span class="line">        <span class="keyword">return</span> User;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4.组合SqliteConnection 到 UserMapper  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="variable">dbPath</span> <span class="operator">=</span> path.join(__dirname, <span class="string">&quot;../sqlite.db&quot;</span>);</span><br><span class="line"><span class="type">const</span> <span class="variable">db</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">sqlite3</span>.Database(dbPath);</span><br><span class="line"><span class="type">const</span> <span class="variable">connection</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqliteConnection</span>(db);</span><br><span class="line"><span class="type">const</span> <span class="variable">userMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UserMapper</span>(connection);</span><br></pre></td></tr></table></figure>
+
+<p>5.插入数据  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="string">&quot;#insert&quot;</span>, () =&gt; &#123;</span><br><span class="line">        it(<span class="string">&quot;should return seq after inserting a new row&quot;</span>, (done) =&gt; &#123;</span><br><span class="line">            <span class="type">const</span> <span class="variable">newUser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">            newUser.username = <span class="string">&quot;frankTest&quot;</span>;</span><br><span class="line">            newUser.password = <span class="string">&quot;pwd&quot;</span>;</span><br><span class="line">            userMapper.insert(newUser)</span><br><span class="line">                .then((id) =&gt; &#123;</span><br><span class="line">                    <span class="type">const</span> <span class="variable">searchUser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">                    searchUser.id = id;</span><br><span class="line">                    <span class="keyword">return</span> userMapper.selectByExample(searchUser);</span><br><span class="line">                &#125;)</span><br><span class="line">                .then((users) =&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (users.length === <span class="number">0</span>) &#123;</span><br><span class="line">                        done(<span class="string">&quot;cannot find user&quot;</span>);</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="type">const</span> <span class="variable">user</span> <span class="operator">=</span> users[<span class="number">0</span>];</span><br><span class="line">                    <span class="keyword">if</span> (newUser.username === user.username</span><br><span class="line">                        &amp;&amp; newUser.password === user.password) &#123;</span><br><span class="line">                        done();</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        done(<span class="string">&quot;user is invalid&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">                .<span class="keyword">catch</span>((err) =&gt; &#123;</span><br><span class="line">                    done(err);</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>6.输出, Sqlite 直接拿不到自增id，需要在查询一下 sqlite_sequence   </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sql:  INSERT INTO <span class="built_in">users</span> (username,password) VALUES (?, ?)</span><br><span class="line">params:  [ <span class="string">&#x27;frankTest&#x27;</span>, <span class="string">&#x27;pwd&#x27;</span> ]</span><br><span class="line">sql:  SELECT <span class="built_in">seq</span> FROM sqlite_sequence WHERE name = ?</span><br><span class="line">params:  [ <span class="string">&#x27;users&#x27;</span> ]</span><br><span class="line">sql:  SELECT <span class="built_in">id</span> AS <span class="built_in">id</span>, username AS username, password AS password FROM <span class="built_in">users</span> WHERE <span class="built_in">id</span> = ?</span><br><span class="line">params:  [ 3 ]</span><br><span class="line">√ should <span class="built_in">return</span> <span class="built_in">seq</span> after inserting a new row (92ms)</span><br></pre></td></tr></table></figure>
+
+<h2 id="依赖注入（inversify）实战"><a href="#依赖注入（inversify）实战" class="headerlink" title="依赖注入（inversify）实战"></a>依赖注入（inversify）实战</h2><p>老实说inversify这个东西我还不是非常明白，如果有错误欢迎指正。<br>1.构造一个可注入的sqlitedb 封装</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; injectable &#125; from <span class="string">&quot;inversify&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> * as path from <span class="string">&quot;path&quot;</span>;</span><br><span class="line"><span class="comment">// 这个必须引入</span></span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> * as sqlite3 from <span class="string">&quot;sqlite3&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@injectable()</span></span><br><span class="line">export <span class="keyword">class</span> <span class="title class_">InjectableSqlitedb</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> readonly sqlitedb: sqlite3.Database;</span><br><span class="line"></span><br><span class="line">    constructor() &#123;</span><br><span class="line">        <span class="type">const</span> <span class="variable">dbPath</span> <span class="operator">=</span> path.join(__dirname, <span class="string">&quot;../../northwind.db&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.sqlitedb = <span class="keyword">new</span> <span class="title class_">sqlite3</span>.Database(dbPath);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.构造一个可注入的SqliteConnection  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; injectable &#125; from <span class="string">&quot;inversify&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> * as path from <span class="string">&quot;path&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> * as sqlite3 from <span class="string">&quot;sqlite3&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SqliteConnection &#125; from <span class="string">&quot;../../../src&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; InjectableSqlitedb &#125; from <span class="string">&quot;./injectableSqlitedb&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@injectable()</span></span><br><span class="line">export <span class="keyword">class</span> <span class="title class_">InjectableSqliteConnection</span> <span class="keyword">extends</span> <span class="title class_">SqliteConnection</span> &#123;</span><br><span class="line">    constructor(db: InjectableSqlitedb) &#123;</span><br><span class="line">        <span class="built_in">super</span>(db.sqlitedb);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.建立视图实体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">class</span> <span class="title class_">NorthwindProductView</span> <span class="keyword">extends</span> <span class="title class_">Entity</span> &#123;</span><br><span class="line">    <span class="meta">@column(&quot;Id&quot;, &quot;Product&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> productId: number;</span><br><span class="line">    <span class="meta">@column(&quot;ProductName&quot;, &quot;Product&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> productName: string;</span><br><span class="line">    <span class="meta">@column(&quot;UnitPrice&quot;, &quot;Product&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> unitPrice: number;</span><br><span class="line">    <span class="meta">@column(&quot;CategoryName&quot;, &quot;Category&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> categoryName: string;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.构造一个可注入的mapper</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; inject, injectable &#125; from <span class="string">&quot;inversify&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BaseMybatisMapper, ISqlConnection &#125; from <span class="string">&quot;../../../src&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; InjectableSqliteConnection &#125; from <span class="string">&quot;../connection/injectableSqliteConnection&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; NorthwindProductView &#125; from <span class="string">&quot;../entity/view/NothwindProductView&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="meta">@injectable()</span></span><br><span class="line">export <span class="keyword">class</span> <span class="title class_">ProductViewMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMybatisMapper</span>&lt;NorthwindProductView&gt; &#123;</span><br><span class="line">    constructor(connection: InjectableSqliteConnection) &#123;</span><br><span class="line">        <span class="built_in">super</span>(connection);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">getEntityClass</span><span class="params">()</span>: <span class="keyword">new</span> () =&gt; NorthwindProductView &#123;</span><br><span class="line">        <span class="keyword">return</span> NorthwindProductView;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5.创造一个专门生成sql 的js 文件 （类似于mybatis xml文件）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; CommonHelper, DynamicQuery, Entity, EntityHelper, SqlTemplate, SqlTemplateProvider &#125; from <span class="string">&quot;../../../src&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; NorthwindProductView &#125; from <span class="string">&quot;../entity/view/NothwindProductView&quot;</span>;</span><br><span class="line"></span><br><span class="line">export <span class="keyword">class</span> <span class="title class_">ProductViewTemplate</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">getSelectProductViewByDynamicQuery</span><span class="params">(dynamicQuery: DynamicQuery&lt;NorthwindProductView&gt;)</span>: SqlTemplate &#123;</span><br><span class="line">        <span class="type">const</span> <span class="variable">columnAs</span> <span class="operator">=</span> SqlTemplateProvider.getColumnsExpression(NorthwindProductView);</span><br><span class="line">        <span class="type">const</span> <span class="variable">filterSqlTemplate</span> <span class="operator">=</span> SqlTemplateProvider.getFilterExpression(NorthwindProductView, dynamicQuery.filters);</span><br><span class="line">        <span class="type">const</span> <span class="variable">sortSqlTemplate</span> <span class="operator">=</span> SqlTemplateProvider.getSortExpression(NorthwindProductView, dynamicQuery.sorts);</span><br><span class="line">        <span class="type">const</span> <span class="variable">params</span> <span class="operator">=</span> [];</span><br><span class="line">        <span class="type">const</span> <span class="variable">wherePlaceholder</span> <span class="operator">=</span> CommonHelper.isNotBlank(filterSqlTemplate.sqlExpression)</span><br><span class="line">            ? `WHERE $&#123;filterSqlTemplate.sqlExpression&#125;`</span><br><span class="line">            : ``;</span><br><span class="line">        <span class="type">const</span> <span class="variable">orderByPlaceholder</span> <span class="operator">=</span> CommonHelper.isNotBlank(sortSqlTemplate.sqlExpression)</span><br><span class="line">            ? `ORDER BY $&#123;sortSqlTemplate.sqlExpression&#125;`</span><br><span class="line">            : ``;</span><br><span class="line"></span><br><span class="line">        <span class="type">const</span> <span class="variable">query</span> <span class="operator">=</span> `SELECT $&#123;columnAs&#125; FROM Product LEFT JOIN Category ` +</span><br><span class="line">            `ON Product.CategoryId = Category.Id $&#123;wherePlaceholder&#125; $&#123;orderByPlaceholder&#125;`;</span><br><span class="line"></span><br><span class="line">        <span class="type">const</span> <span class="variable">sqlTemplate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlTemplate</span>();</span><br><span class="line">        sqlTemplate.sqlExpression = query;</span><br><span class="line">        sqlTemplate.params = sqlTemplate.params.concat(filterSqlTemplate.params).concat(sortSqlTemplate.params);</span><br><span class="line">        <span class="keyword">return</span> sqlTemplate;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>6.绑定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Container &#125; from <span class="string">&quot;inversify&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;reflect-metadata&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; InjectableSqliteConnection &#125; from <span class="string">&quot;./connection/injectableSqliteConnection&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; InjectableSqlitedb &#125; from <span class="string">&quot;./connection/injectableSqlitedb&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; NorthwindProductView &#125; from <span class="string">&quot;./entity/view/NothwindProductView&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ProductViewMapper &#125; from <span class="string">&quot;./mapper/productViewMapper&quot;</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ProductViewTemplate &#125; from <span class="string">&quot;./template/productViewTemplate&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="variable">myContainer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Container</span>();</span><br><span class="line">myContainer.bind&lt;InjectableSqliteConnection&gt;(InjectableSqliteConnection).toSelf();</span><br><span class="line">myContainer.bind&lt;ProductViewMapper&gt;(ProductViewMapper).toSelf();</span><br><span class="line">myContainer.bind&lt;InjectableSqlitedb&gt;(InjectableSqlitedb).toSelf();</span><br></pre></td></tr></table></figure>
+
+<p>7.测试注入</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="string">&quot;inject Test&quot;</span>, () =&gt; &#123;</span><br><span class="line">    it(<span class="string">&quot;should get inject value&quot;</span>, () =&gt; &#123;</span><br><span class="line">            <span class="type">const</span> <span class="variable">productViewMapper</span> <span class="operator">=</span> myContainer.get&lt;ProductViewMapper&gt;(ProductViewMapper);</span><br><span class="line">            expect(<span class="literal">false</span>).to.be.eq(CommonHelper.isNullOrUndefined(productViewMapper));</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="mybatis-风格查询"><a href="#mybatis-风格查询" class="headerlink" title="mybatis 风格查询"></a>mybatis 风格查询</h2><p>1.添加模板， 这里我们看到 #{price} 就是一个站位</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">class</span> <span class="title class_">ProductViewTemplate</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">getSelectPriceGreaterThan20</span><span class="params">()</span>: string &#123;</span><br><span class="line">        <span class="type">const</span> <span class="variable">columnAs</span> <span class="operator">=</span> SqlTemplateProvider.getColumnsExpression(NorthwindProductView);</span><br><span class="line">        <span class="type">const</span> <span class="variable">query</span> <span class="operator">=</span> `SELECT $&#123;columnAs&#125; FROM Product LEFT JOIN Category ` +</span><br><span class="line">            `ON Product.CategoryId = Category.Id WHERE Product.UnitPrice &gt; #&#123;price&#125;`;</span><br><span class="line">        <span class="keyword">return</span> query;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.查询，这里我们把参数放到一个map里面  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="string">&quot;base Mapper test&quot;</span>, () =&gt; &#123;</span><br><span class="line">    <span class="type">const</span> <span class="variable">productViewMapper</span> <span class="operator">=</span> myContainer.get&lt;ProductViewMapper&gt;(ProductViewMapper);</span><br><span class="line">        it(<span class="string">&quot;mybatis style sql template&quot;</span>, (done) =&gt; &#123;</span><br><span class="line">            <span class="type">const</span> <span class="variable">query</span> <span class="operator">=</span> ProductViewTemplate.getSelectPriceGreaterThan20();</span><br><span class="line">            const paramMap: &#123; [key: string]: any &#125; = &#123;&#125;;</span><br><span class="line">            <span class="comment">// 这里属性为price 的值为20</span></span><br><span class="line">            paramMap.price = <span class="number">20</span>;</span><br><span class="line">            productViewMapper.mybatisSelectEntities(query, paramMap)</span><br><span class="line">                .then((priceViews) =&gt; &#123;</span><br><span class="line">                    <span class="keyword">if</span> (priceViews.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        done();</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        done(<span class="string">&quot;should have items&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">                .<span class="keyword">catch</span>((err) =&gt; &#123;</span><br><span class="line">                    done(err);</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.查询结果  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">base Mapper <span class="built_in">test</span></span><br><span class="line">sql:  SELECT Product.Id AS product_id, Product.ProductName AS product_name, Product.UnitPrice AS unit_price, Category.CategoryName AS category_name FROM Product LEFT JOIN Category ON Product.CategoryId = Categor</span><br><span class="line">y.Id WHERE Product.UnitPrice &gt; ?</span><br><span class="line">params:  [ 20 ]</span><br><span class="line">√ mybatis style sql template</span><br></pre></td></tr></table></figure>
+
+<h2 id="分页"><a href="#分页" class="headerlink" title="分页"></a>分页</h2><p>基于上面的注入实战，<br>1.添加动态查询模板  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">export <span class="keyword">class</span> <span class="title class_">ProductViewTemplate</span> &#123;</span><br><span class="line">    <span class="comment">// 这个就是以前的动态查询，请查看 mybatis-dynamic-query</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">getSelectProductViewByDynamicQuery</span><span class="params">(dynamicQuery: DynamicQuery&lt;NorthwindProductView&gt;)</span>: SqlTemplate &#123;</span><br><span class="line">        <span class="type">const</span> <span class="variable">columnAs</span> <span class="operator">=</span> SqlTemplateProvider.getColumnsExpression(NorthwindProductView);</span><br><span class="line">        <span class="type">const</span> <span class="variable">filterSqlTemplate</span> <span class="operator">=</span> SqlTemplateProvider.getFilterExpression(NorthwindProductView, dynamicQuery.filters);</span><br><span class="line">        <span class="type">const</span> <span class="variable">sortSqlTemplate</span> <span class="operator">=</span> SqlTemplateProvider.getSortExpression(NorthwindProductView, dynamicQuery.sorts);</span><br><span class="line">        <span class="type">const</span> <span class="variable">params</span> <span class="operator">=</span> [];</span><br><span class="line">        <span class="type">const</span> <span class="variable">wherePlaceholder</span> <span class="operator">=</span> CommonHelper.isNotBlank(filterSqlTemplate.sqlExpression)</span><br><span class="line">            ? `WHERE $&#123;filterSqlTemplate.sqlExpression&#125;`</span><br><span class="line">            : ``;</span><br><span class="line">        <span class="type">const</span> <span class="variable">orderByPlaceholder</span> <span class="operator">=</span> CommonHelper.isNotBlank(sortSqlTemplate.sqlExpression)</span><br><span class="line">            ? `ORDER BY $&#123;sortSqlTemplate.sqlExpression&#125;`</span><br><span class="line">            : ``;</span><br><span class="line"></span><br><span class="line">        <span class="type">const</span> <span class="variable">query</span> <span class="operator">=</span> `SELECT $&#123;columnAs&#125; FROM Product LEFT JOIN Category ` +</span><br><span class="line">            `ON Product.CategoryId = Category.Id $&#123;wherePlaceholder&#125; $&#123;orderByPlaceholder&#125;`;</span><br><span class="line"></span><br><span class="line">        <span class="type">const</span> <span class="variable">sqlTemplate</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlTemplate</span>();</span><br><span class="line">        sqlTemplate.sqlExpression = query;</span><br><span class="line">        sqlTemplate.params = sqlTemplate.params.concat(filterSqlTemplate.params).concat(sortSqlTemplate.params);</span><br><span class="line">        <span class="keyword">return</span> sqlTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="title function_">getSelectPriceGreaterThan20</span><span class="params">()</span>: string &#123;</span><br><span class="line">        <span class="type">const</span> <span class="variable">columnAs</span> <span class="operator">=</span> SqlTemplateProvider.getColumnsExpression(NorthwindProductView);</span><br><span class="line">        <span class="type">const</span> <span class="variable">query</span> <span class="operator">=</span> `SELECT $&#123;columnAs&#125; FROM Product LEFT JOIN Category ` +</span><br><span class="line">            `ON Product.CategoryId = Category.Id WHERE Product.UnitPrice &gt; #&#123;price&#125;`;</span><br><span class="line">        <span class="keyword">return</span> query;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2.分页查询  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="string">&quot;paging&quot;</span>, (done) =&gt; &#123;</span><br><span class="line">            <span class="type">const</span> <span class="variable">priceFilter</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>&lt;NorthwindProductView&gt;((u) =&gt; u.unitPrice, FilterOperator.LESS_THAN, <span class="number">20</span>);</span><br><span class="line">            <span class="type">const</span> <span class="variable">nameSort</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">SortDescriptor</span>&lt;NorthwindProductView&gt;((u) =&gt; u.productName);</span><br><span class="line">            <span class="type">const</span> <span class="variable">dynamicQuery</span> <span class="operator">=</span> DynamicQuery.createIntance&lt;NorthwindProductView&gt;()</span><br><span class="line">                .addFilters(priceFilter).addSorts(nameSort);</span><br><span class="line"></span><br><span class="line">            <span class="type">const</span> <span class="variable">sqlTemplate</span> <span class="operator">=</span> ProductViewTemplate.getSelectProductViewByDynamicQuery(dynamicQuery);</span><br><span class="line">            <span class="type">const</span> <span class="variable">pageRowBounds</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PageRowBounds</span>(<span class="number">1</span>, <span class="number">20</span>);</span><br><span class="line">            productViewMapper</span><br><span class="line">                .selectEntitiesPageRowBounds(sqlTemplate.sqlExpression, sqlTemplate.params, pageRowBounds)</span><br><span class="line">                .then((page) =&gt; &#123;</span><br><span class="line">                    <span class="type">const</span> <span class="variable">pageIndexEq</span> <span class="operator">=</span> page.getPageNum() === pageRowBounds.getPageNum();</span><br><span class="line">                    <span class="type">const</span> <span class="variable">pageSizeEq</span> <span class="operator">=</span> page.getPageSize() === pageRowBounds.getPageSize();</span><br><span class="line">                    <span class="type">const</span> <span class="variable">entitiesCountEq</span> <span class="operator">=</span> page.getEntities.length &lt;= pageRowBounds.getPageSize();</span><br><span class="line">                    <span class="type">const</span> <span class="variable">pagesEq</span> <span class="operator">=</span> page.getPages() === Math.ceil(page.getTotal() / page.getPageSize());</span><br><span class="line">                    <span class="keyword">if</span> (pageIndexEq &amp;&amp; pageSizeEq &amp;&amp; entitiesCountEq &amp;&amp; pagesEq) &#123;</span><br><span class="line">                        done();</span><br><span class="line">                    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                        done(<span class="string">&quot;something is invalid&quot;</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">                .<span class="keyword">catch</span>((err) =&gt; &#123;</span><br><span class="line">                    done(err);</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<p>3.输出分页</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sql:  SELECT Product.Id AS product_id, Product.ProductName AS product_name, Product.UnitPrice AS unit_price, Category.CategoryName AS category_name FROM Product LEFT JOIN Category ON Product.CategoryId = Categor</span><br><span class="line">y.Id WHERE Product.UnitPrice &lt; ? ORDER BY Product.ProductName ASC <span class="built_in">limit</span> 0, 20</span><br><span class="line">params:  [ 20 ]</span><br><span class="line">selec Count sql:  SELECT COUNT(0) FROM (SELECT Product.Id AS product_id, Product.ProductName AS product_name, Product.UnitPrice AS unit_price, Category.CategoryName AS category_name FROM Product LEFT JOIN Catego</span><br><span class="line">ry ON Product.CategoryId = Category.Id WHERE Product.UnitPrice &lt; ? ORDER BY Product.ProductName ASC) AS t</span><br><span class="line">params:  [ 20 ]</span><br><span class="line">√ paging</span><br></pre></td></tr></table></figure>
+
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>为了这次1024，我真是有点赶想让大家早点看看这个项目，当然还有很多测试要做。<br>而且我这里并没有讲动态查询，后面的文章会补上。<br>祝大家节日快乐。 </p>
+<h2 id="关注我"><a href="#关注我" class="headerlink" title="关注我　##"></a>关注我　##</h2><p>最后大家可以关注我和 tsbatis项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/tsbatis" data-size="large" data-show-count="true" aria-label="Star wz2cool/tsbatis on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/tsbatis" data-size="large" data-show-count="true" aria-label="Fork wz2cooltsbatis on GitHub">Fork</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/typescript/">typescript</a><a href="/tags/tsbatis/">tsbatis</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/10/24/tsbatis-preview/" data-title="tsbatis-preview | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/11/01/vm-net-hostonly/" title="virualbox 安装 otter 必备软件">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  virualbox 安装 otter 必备软件</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/10/05/mdq2-2/"  title="mdq2.2">
+ <strong>NEXT:</strong><br/> 
+ <span>mdq2.2
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TsBatis"><span class="toc-number">2.</span> <span class="toc-text">TsBatis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Entity"><span class="toc-number">2.1.</span> <span class="toc-text">Entity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TableEntity"><span class="toc-number">2.2.</span> <span class="toc-text">TableEntity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#column"><span class="toc-number">2.3.</span> <span class="toc-text">@column</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RowBounds-%E7%B1%BB"><span class="toc-number">2.4.</span> <span class="toc-text">RowBounds 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PageRowBounds-%E7%B1%BB"><span class="toc-number">2.5.</span> <span class="toc-text">PageRowBounds 类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Page"><span class="toc-number">2.6.</span> <span class="toc-text">Page&lt;&gt;</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ISqlConnection"><span class="toc-number">2.7.</span> <span class="toc-text">ISqlConnection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SqliteConnection"><span class="toc-number">2.8.</span> <span class="toc-text">SqliteConnection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MysqlConnection"><span class="toc-number">2.9.</span> <span class="toc-text">MysqlConnection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseMapper"><span class="toc-number">2.10.</span> <span class="toc-text">BaseMapper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseMybatisMapper"><span class="toc-number">2.11.</span> <span class="toc-text">BaseMybatisMapper</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseTableMapper"><span class="toc-number">2.12.</span> <span class="toc-text">BaseTableMapper</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-number">3.</span> <span class="toc-text">实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#BaseTableMapper%E5%AE%9E%E6%88%98"><span class="toc-number">3.1.</span> <span class="toc-text">BaseTableMapper实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5%EF%BC%88inversify%EF%BC%89%E5%AE%9E%E6%88%98"><span class="toc-number">3.2.</span> <span class="toc-text">依赖注入（inversify）实战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#mybatis-%E9%A3%8E%E6%A0%BC%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.3.</span> <span class="toc-text">mybatis 风格查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5"><span class="toc-number">3.4.</span> <span class="toc-text">分页</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">3.5.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91"><span class="toc-number">3.6.</span> <span class="toc-text">关注我　##</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

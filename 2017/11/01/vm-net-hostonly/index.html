@@ -1,0 +1,410 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>virualbox 安装 otter 必备软件 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="前言最近研究了一下阿里otter项目（分布式数据库同步），所以就在virualbox 上开始准备学习一下，遇到了不少坑，所以记录一下啊。otter 项目：https://github.com/alibaba/otter
+
+win10 无法运行virualbox 5.x版本以上运行
+使用Host-on">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/11/01/vm-net-hostonly/" title="virualbox 安装 otter 必备软件" itemprop="url">virualbox 安装 otter 必备软件</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-11-01T07:43:09.000Z" itemprop="datePublished">2017-11-01</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.601Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#win10-%E5%AE%89%E8%A3%85virualbox"><span class="toc-number">2.</span> <span class="toc-text">win10 安装virualbox</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85virualbox-4-3-6"><span class="toc-number">2.1.</span> <span class="toc-text">安装virualbox 4.3.6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-360"><span class="toc-number">2.2.</span> <span class="toc-text">关闭 360</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Host-only-Network"><span class="toc-number">2.3.</span> <span class="toc-text">创建 Host-only Network</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85centos7-mini"><span class="toc-number">3.</span> <span class="toc-text">安装centos7 mini</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C"><span class="toc-number">3.1.</span> <span class="toc-text">配置网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85centos7-mini-1"><span class="toc-number">3.2.</span> <span class="toc-text">安装centos7 mini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%8A%E7%BD%91"><span class="toc-number">3.3.</span> <span class="toc-text">配置上网</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-java"><span class="toc-number">4.</span> <span class="toc-text">安装 java</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-mysql"><span class="toc-number">5.</span> <span class="toc-text">安装 mysql</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9my-conf"><span class="toc-number">5.1.</span> <span class="toc-text">修改my.conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="toc-number">5.2.</span> <span class="toc-text">外网访问</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-aria2c"><span class="toc-number">6.</span> <span class="toc-text">安装 aria2c</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-zookeeper"><span class="toc-number">7.</span> <span class="toc-text">安装 zookeeper</span></a></li></ol>
+		</div>
+		
+		<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>最近研究了一下阿里otter项目（分布式数据库同步），所以就在virualbox 上开始准备学习一下，遇到了不少坑，所以记录一下啊。<br>otter 项目：<a href="https://github.com/alibaba/otter">https://github.com/alibaba/otter</a></p>
+<ul>
+<li>win10 无法运行virualbox 5.x版本以上运行</li>
+<li>使用Host-only 主机和虚拟机互通，（win10 更新导致桥接不可用）</li>
+<li>otter 必要软件准备</li>
+</ul>
+<h1 id="win10-安装virualbox"><a href="#win10-安装virualbox" class="headerlink" title="win10 安装virualbox"></a>win10 安装virualbox</h1><h2 id="安装virualbox-4-3-6"><a href="#安装virualbox-4-3-6" class="headerlink" title="安装virualbox 4.3.6"></a>安装virualbox 4.3.6</h2><p>这个是第一个坑，安装5.x版本一直报错，请使用virualbox 4.3.6版本。</p>
+<h2 id="关闭-360"><a href="#关闭-360" class="headerlink" title="关闭 360"></a>关闭 360</h2><p>无法运行镜像，这个是由于360导致的，请关闭360安全卫士。</p>
+<h2 id="创建-Host-only-Network"><a href="#创建-Host-only-Network" class="headerlink" title="创建 Host-only Network"></a>创建 Host-only Network</h2><ol>
+<li>File -&gt; Preferences… -&gt; Network -&gt; Host-only Networks<br>点击添加<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/addHostOnly.png"></li>
+<li>配置Adapter 和 DHCP Server 如下<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/hostonlyAdapter.png"><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/hostonlyDHCP.png"></li>
+</ol>
+<h1 id="安装centos7-mini"><a href="#安装centos7-mini" class="headerlink" title="安装centos7 mini"></a>安装centos7 mini</h1><h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><ol>
+<li>第一个网卡为NAT，主要访问外网。<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/netnat.png"></li>
+<li>第二块为host-only 主要和主机互通<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nethostonly.png"></li>
+</ol>
+<h2 id="安装centos7-mini-1"><a href="#安装centos7-mini-1" class="headerlink" title="安装centos7 mini"></a>安装centos7 mini</h2><p>这里一步一步，就不赘述了…</p>
+<h2 id="配置上网"><a href="#配置上网" class="headerlink" title="配置上网"></a>配置上网</h2><p>已进入系统很奇怪，什么网都上不去，这个就需要我们自动获取ip 地址  </p>
+<ol>
+<li>输入命令 <code>$ nmtui</code><br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/nmtui.png"></li>
+<li>enp0s3应该是我们那块NAT 网卡, 把状态都改成 Automatic，<br>（这里有个X 真是坑，是用空格选中的！！！）<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/enp3.png"></li>
+<li>其他的网卡一样自动获取<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/othereth.png"></li>
+<li>使用 <code>$ ip a</code> 查看链接状态<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/ipa.png"></li>
+</ol>
+<h1 id="安装-java"><a href="#安装-java" class="headerlink" title="安装 java"></a>安装 java</h1><p>这里也是一个坑，一定要用oracle 的JDK，千万不要用openJDK。因为otter中node节点在openJDK 会报错 SHA找不到错误。<br>请去oracle 官网下载：<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html">http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html</a><br>下载完成以后执行<br><code>$ yum localinstall [JDK.rpm]</code></p>
+<h1 id="安装-mysql"><a href="#安装-mysql" class="headerlink" title="安装 mysql"></a>安装 mysql</h1><p>和java 一样，centos 默认提供是mariadb，为了防止不必要的意外，我们还是使用mysql5.7, 依次执行语句。<br><code>$ wget https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm</code><br><code>$ sudo yum localinstall mysql57-community-release-el7-11.noarch.rpm </code><br><code>$ yum repolist enabled | grep &quot;mysql.*-community.*&quot; </code><br><code>$ sudo yum install mysql-community-server</code></p>
+<h2 id="修改my-conf"><a href="#修改my-conf" class="headerlink" title="修改my.conf"></a>修改my.conf</h2><p><code>$ vim /etc/my.conf</code>    </p>
+<ol>
+<li>修改默认字符集为utf8, 这个不改的话以后配置 otter 会报错。<br>添加 charater-set-server&#x3D;utf8   </li>
+<li>开启binlog, otter 主要使用binlog, 添加：<br>log-bin&#x3D;mysql-bin<br>server-id&#x3D;1<br><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/binlog.png"></li>
+<li>重启service<br><code>$ service mysqld restart</code></li>
+</ol>
+<h2 id="外网访问"><a href="#外网访问" class="headerlink" title="外网访问"></a>外网访问</h2><p>这个大家根据自己需求建立访问权限，这里就不赘述了。</p>
+<h1 id="安装-aria2c"><a href="#安装-aria2c" class="headerlink" title="安装 aria2c"></a>安装 aria2c</h1><p>主要是otter node 节点需要使用这个库，官方文档是说要下源码进行编译，这里我们可以直接用安装包安装。<br><code>$ yum install epel-release -y</code><br><code>$ yum install aria2 -y</code><br>最后可以用命令确定安装成功<br><code>$ aria2c -v</code></p>
+<h1 id="安装-zookeeper"><a href="#安装-zookeeper" class="headerlink" title="安装 zookeeper"></a>安装 zookeeper</h1><p>大概就是这几条命令就好了。<br><code>$ mkdir /tmp</code><br><code>$ wget http://ftp.jaist.ac.jp/pub/apache/zookeeper/zookeeper-3.4.9/zookeeper-3.4.9.tar.gz</code><br><code>$ tar -xvf zookeeper-3.4.9.tar.gz -C /tmp/</code><br><code>$ cd /tmp/zookeeper-3.4.9/conf</code><br><code>$ mv zoo_sample.cfg zoo.cfg</code><br><code>$ cd ..</code><br><code>$ ./bin/zkServer.sh start</code></p>
+<p>嗯 基本上otter 要的东西都准备好了，后面开始otter 安装。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/centos7/">centos7</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/11/01/vm-net-hostonly/" data-title="virualbox 安装 otter 必备软件 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/11/01/otter-install/" title="virualbox 搭建 otter">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  virualbox 搭建 otter</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/10/24/tsbatis-preview/"  title="tsbatis-preview">
+ <strong>NEXT:</strong><br/> 
+ <span>tsbatis-preview
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#win10-%E5%AE%89%E8%A3%85virualbox"><span class="toc-number">2.</span> <span class="toc-text">win10 安装virualbox</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85virualbox-4-3-6"><span class="toc-number">2.1.</span> <span class="toc-text">安装virualbox 4.3.6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E9%97%AD-360"><span class="toc-number">2.2.</span> <span class="toc-text">关闭 360</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-Host-only-Network"><span class="toc-number">2.3.</span> <span class="toc-text">创建 Host-only Network</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85centos7-mini"><span class="toc-number">3.</span> <span class="toc-text">安装centos7 mini</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C"><span class="toc-number">3.1.</span> <span class="toc-text">配置网络</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85centos7-mini-1"><span class="toc-number">3.2.</span> <span class="toc-text">安装centos7 mini</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%8A%E7%BD%91"><span class="toc-number">3.3.</span> <span class="toc-text">配置上网</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-java"><span class="toc-number">4.</span> <span class="toc-text">安装 java</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-mysql"><span class="toc-number">5.</span> <span class="toc-text">安装 mysql</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9my-conf"><span class="toc-number">5.1.</span> <span class="toc-text">修改my.conf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E7%BD%91%E8%AE%BF%E9%97%AE"><span class="toc-number">5.2.</span> <span class="toc-text">外网访问</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-aria2c"><span class="toc-number">6.</span> <span class="toc-text">安装 aria2c</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-zookeeper"><span class="toc-number">7.</span> <span class="toc-text">安装 zookeeper</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

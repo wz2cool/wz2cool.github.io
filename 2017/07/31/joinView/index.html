@@ -1,0 +1,389 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Mybatis Dynamic Query join视图 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="项目地址：https://github.com/wz2cool/mybatis-dynamic-query文档地址：https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/
+简介前面基本增删改查完成，现在可以到渐进阶段。在实际查">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/07/31/joinView/" title="Mybatis Dynamic Query join视图" itemprop="url">Mybatis Dynamic Query join视图</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-07-31T15:44:01.000Z" itemprop="datePublished">2017-07-31</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.544Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.</span> <span class="toc-text">开始查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">4.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8-%E6%88%91"><span class="toc-number">5.</span> <span class="toc-text">关注@我　##</span></a></li></ol>
+		</div>
+		
+		<p>项目地址：<a href="https://github.com/wz2cool/mybatis-dynamic-query">https://github.com/wz2cool/mybatis-dynamic-query</a><br>文档地址：<a href="https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/">https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/</a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>前面基本增删改查完成，现在可以到渐进阶段。在实际查询中，我们不可能只查询一张表，我们肯定要连表查询，所以我们相当于在查询一个视图，那么和简单的单表查询有什么区别呢？这里我们就必须要用到 @Column 中tableOrAlias去指定这个列来自于哪张表，具体我们还是看例子吧。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>创建两张表，一张产品类型表，一张产品表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> category;</span><br><span class="line"><span class="keyword">CREATE TABLE</span> category (</span><br><span class="line">  category_id   <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span>,</span><br><span class="line">  category_name <span class="type">VARCHAR</span> (<span class="number">50</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">  description   <span class="type">VARCHAR</span> (<span class="number">100</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> product;</span><br><span class="line"><span class="keyword">CREATE TABLE</span> product (</span><br><span class="line">  product_id    <span class="type">INT</span> <span class="keyword">PRIMARY KEY</span> auto_increment,</span><br><span class="line">  category_id   <span class="type">INT</span> <span class="keyword">NOT NULL</span>,</span><br><span class="line">  product_name  <span class="type">VARCHAR</span> (<span class="number">50</span>) <span class="keyword">NOT NULL</span>,</span><br><span class="line">  price         <span class="type">DECIMAL</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> category;</span><br><span class="line"><span class="keyword">INSERT INTO</span> category (category_id, category_name, description) <span class="keyword">VALUES</span></span><br><span class="line">  (<span class="number">1</span>, <span class="string">&#x27;Beverages&#x27;</span>, <span class="string">&#x27;test&#x27;</span>),</span><br><span class="line">  (<span class="number">2</span>, <span class="string">&#x27;Condiments&#x27;</span>, <span class="string">&#x27;test&#x27;</span>),</span><br><span class="line">  (<span class="number">3</span>, <span class="string">&#x27;Oil&#x27;</span>, <span class="string">&#x27;test&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> product;</span><br><span class="line"><span class="keyword">INSERT INTO</span> product (product_id, category_id, product_name, price) <span class="keyword">VALUES</span></span><br><span class="line">  (<span class="number">1</span>, <span class="number">1</span>, <span class="string">&#x27;Northwind Traders Chai&#x27;</span>, <span class="number">18.0000</span>),</span><br><span class="line">  (<span class="number">2</span>, <span class="number">2</span>, <span class="string">&#x27;Northwind Traders Syrup&#x27;</span>, <span class="number">7.5000</span>),</span><br><span class="line">  (<span class="number">3</span>, <span class="number">2</span>, <span class="string">&#x27;Northwind Traders Cajun Seasoning&#x27;</span>, <span class="number">16.5000</span>),</span><br><span class="line">  (<span class="number">4</span>, <span class="number">3</span>, <span class="string">&#x27;Northwind Traders Olive Oil&#x27;</span>, <span class="number">16.5000</span>);</span><br></pre></td></tr></table></figure>
+<p>关键的地方来了，我们创建个ProductView的实体类, 这里我们指定了每列来自于那长表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductView</span> &#123;</span><br><span class="line">    <span class="comment">// 这三个列来自于产品表</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;product_id&quot;, tableOrAlias = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long productID;</span><br><span class="line">    <span class="meta">@Column(name = &quot;product_name&quot;, tableOrAlias = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String productName;</span><br><span class="line">    <span class="meta">@Column(name = &quot;price&quot;, tableOrAlias = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> BigDecimal price;</span><br><span class="line">    <span class="comment">// 这三个列来自于类别表</span></span><br><span class="line">    <span class="meta">@Column(name = &quot;category_id&quot;, tableOrAlias = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long categoryID;</span><br><span class="line">    <span class="meta">@Column(name = &quot;category_name&quot;, tableOrAlias = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String categoryName;</span><br><span class="line">    <span class="meta">@Column(name = &quot;description&quot;, tableOrAlias = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    <span class="comment">// get/set...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Dao 接口, 和其他动态查询是一样的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">NorthwindDao</span> &#123;</span><br><span class="line">    List&lt;ProductView&gt; <span class="title function_">getProductViewsByDynamic</span><span class="params">(Map&lt;String, Object&gt; params)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>xml 中这里注意了，我们并没有给表别别名，所以在 on 的时候一定是 [表名].[列名]</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getProductViewsByDynamic&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;java.util.Map&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">resultType</span>=<span class="string">&quot;com.github.wz2cool.dynamic.mybatis.db.model.entity.view.ProductView&quot;</span>&gt;</span></span><br><span class="line">        SELECT * FROM product LEFT JOIN category ON product.category_id = category.category_id</span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;whereExpression != null and whereExpression != &#x27;&#x27;&quot;</span>&gt;</span>WHERE $&#123;whereExpression&#125;<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;orderExpression != null and orderExpression != &#x27;&#x27;&quot;</span>&gt;</span>ORDER BY $&#123;orderExpression&#125;<span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="开始查询"><a href="#开始查询" class="headerlink" title="开始查询"></a>开始查询</h2><p>其实当我们定义好类中每个属性来自于哪张表以后，其他的和单表动态查询就一样了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testEndWith</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">FilterDescriptor</span> <span class="variable">nameFilter</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>(FilterCondition.AND, <span class="string">&quot;categoryName&quot;</span>, FilterOperator.END_WITH, <span class="string">&quot;l&quot;</span>);</span><br><span class="line">        Map&lt;String, Object&gt; queryParams =</span><br><span class="line">                mybatisQueryProvider.getWhereQueryParamMap(</span><br><span class="line">                        ProductView.class, <span class="string">&quot;whereExpression&quot;</span>, nameFilter);</span><br><span class="line">        List&lt;ProductView&gt; productViews = northwindDao.getProductViewsByDynamic(queryParams);</span><br><span class="line">        assertEquals(<span class="string">&quot;Oil&quot;</span>, productViews.get(<span class="number">0</span>).getCategoryName());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果我们发现，每个查询的的列都带上了表名（别名也可以）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT * FROM product LEFT JOIN category ON product.category_id = category.category_id WHERE (category.category_name LIKE ?) </span><br><span class="line">==&gt; Parameters: %l(String)</span><br><span class="line">&lt;==    Columns: PRODUCT_ID, CATEGORY_ID, PRODUCT_NAME, PRICE, CATEGORY_ID, CATEGORY_NAME, DESCRIPTION</span><br><span class="line">&lt;==        Row: 4, 3, Northwind Traders Olive Oil, 16.5000, 3, Oil, <span class="built_in">test</span></span><br><span class="line">&lt;==      Total: 1</span><br><span class="line">Closing non transact</span><br></pre></td></tr></table></figure>
+
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>在类中指定每个属性来自于哪个表中的那个列的映射是这个的核心。这里并不推荐使用别名类似（t1,t2）这种去设置 tableOrAlias，为什么呢？因为没有必要而且会影响你阅读代码，t1 是哪个表你要去猜测，所以推荐还是直接使用表名即可。</p>
+<h2 id="关注-我"><a href="#关注-我" class="headerlink" title="关注@我　##"></a>关注@我　##</h2><p>最后大家可以关注我和 Mybatis-Dynamic-query项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query" data-size="large" data-show-count="true" aria-label="Star wz2cool/mybatis-dynamic-query on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query/fork" data-size="large" data-show-count="true" aria-label="Fork wz2cool/mybatis-dynamic-query on GitHub">Fork</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/07/31/joinView/" data-title="Mybatis Dynamic Query join视图 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/08/04/tkMapperFirst/" title="初识 tk.mybatis.mapper">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  初识 tk.mybatis.mapper</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/07/31/propertyExpression/"  title="Mybatis Dynamic Query 属性表达式">
+ <strong>NEXT:</strong><br/> 
+ <span>Mybatis Dynamic Query 属性表达式
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%A7%8B%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.</span> <span class="toc-text">开始查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">4.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8-%E6%88%91"><span class="toc-number">5.</span> <span class="toc-text">关注@我　##</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

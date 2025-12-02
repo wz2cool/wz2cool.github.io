@@ -1,0 +1,394 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Mybatis Dynamic Query 属性表达式 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="项目地址：https://github.com/wz2cool/mybatis-dynamic-query文档地址：https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/
+简介作为.net 出生的我，一直被C#强大的语法所吸引">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/07/31/propertyExpression/" title="Mybatis Dynamic Query 属性表达式" itemprop="url">Mybatis Dynamic Query 属性表达式</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-07-31T08:34:14.000Z" itemprop="datePublished">2017-07-31</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.570Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%B0%81%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">简单封装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A6%E5%AE%9A"><span class="toc-number">2.1.</span> <span class="toc-text">约定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">实际应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8-%E6%88%91"><span class="toc-number">4.</span> <span class="toc-text">关注@我　##</span></a></li></ol>
+		</div>
+		
+		<p>项目地址：<a href="https://github.com/wz2cool/mybatis-dynamic-query">https://github.com/wz2cool/mybatis-dynamic-query</a><br>文档地址：<a href="https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/">https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/</a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>作为.net 出生的我，一直被C#强大的语法所吸引，比如我们很容易获得一个属性的名字</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> string GetPropertyName&lt;T&gt;(Expression&lt;Func&lt;T&gt;&gt; expression)</span><br><span class="line">&#123;</span><br><span class="line">    MemberExpression memberExpression;</span><br><span class="line">    <span class="keyword">if</span> (expression.Body is UnaryExpression)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">var</span> <span class="variable">unaryExpression</span> <span class="operator">=</span> (UnaryExpression)expression.Body;</span><br><span class="line">        memberExpression = (MemberExpression)unaryExpression.Operand;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        memberExpression = (MemberExpression)expression.Body;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> memberExpression.Member.Name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// call with lambda</span></span><br><span class="line"><span class="type">var</span> <span class="variable">propertyPath</span> <span class="operator">=</span> ObjectHelper.GetPropertyName(() =&gt; firstOrder.OrderDate),</span><br></pre></td></tr></table></figure>
+<p>在1.0.2 中我们同样支持了这个属性，当然我们是站在别人的肩膀上实现的（jodd的一个methodref实现）。</p>
+<h2 id="简单封装"><a href="#简单封装" class="headerlink" title="简单封装"></a>简单封装</h2><p>我们封装了jodd 的这个实现到了CommonsHelper中去，并且加上synchronized防止多线程，如果我们看到jodd 源码就知道，里面用到的是一个WeakHashMap做缓存，那么这个WeakHashMap线程不安全，所以我们还是让我们调用的方法线程安全。</p>
+<h3 id="约定"><a href="#约定" class="headerlink" title="约定"></a>约定</h3><ol>
+<li>T 就是我们实体类，而Class<T> 就是我们实体类的类型。</li>
+<li>getMethodFunc 一定是与之对应field 的一个get方法。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 主要这里我们通过get方法来获取field 名字。</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; String <span class="title function_">getPropertyName</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; target, </span></span><br><span class="line"><span class="params">    <span class="keyword">final</span> Function&lt;T, Object&gt; getMethodFunc)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">methodName</span> <span class="operator">=</span> obtainGetMethodName(target, getMethodFunc);</span><br><span class="line">        <span class="keyword">if</span> (methodName.startsWith(<span class="string">&quot;get&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> java.beans.Introspector.decapitalize(methodName.substring(<span class="number">3</span>, methodName.length()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> methodName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> &lt;T&gt; String <span class="title function_">obtainGetMethodName</span><span class="params">(<span class="keyword">final</span> Class&lt;T&gt; target, </span></span><br><span class="line"><span class="params">    <span class="keyword">final</span> Function&lt;T, Object&gt; getMethodFunc)</span> &#123;</span><br><span class="line">        Methref&lt;T&gt; methodRef = Methref.on(target);</span><br><span class="line">        getMethodFunc.apply(methodRef.to());</span><br><span class="line">        <span class="keyword">return</span> methodRef.ref();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h3><p>这里主要给 FilterDescriptor 和 SortDescriptor 设置propertyPath 提供了一个新的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; FilterDescriptor(FilterCondition condition,</span><br><span class="line">                                Class&lt;T&gt; entityClass,</span><br><span class="line">                                Function&lt;T, Object&gt; getFieldFunc,</span><br><span class="line">                                FilterOperator operator,</span><br><span class="line">                                Object value) &#123;</span><br><span class="line">        <span class="built_in">this</span>.setCondition(condition);</span><br><span class="line">        <span class="built_in">this</span>.operator = operator;</span><br><span class="line">        <span class="built_in">this</span>.propertyPath = CommonsHelper.getPropertyName(entityClass, getFieldFunc);</span><br><span class="line">        <span class="built_in">this</span>.value = value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; SortDescriptor(Class&lt;T&gt; entityClass, Function&lt;T, Object&gt; getFieldFunc, SortDirection sortDirection) &#123;</span><br><span class="line">        <span class="built_in">this</span>.propertyPath = CommonsHelper.getPropertyName(entityClass, getFieldFunc);</span><br><span class="line">        <span class="built_in">this</span>.sortDirection = sortDirection;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样我们在创建时候可以这样子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lambdaNewInstanceTest</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">FilterDescriptor</span> <span class="variable">filterDescriptor</span> <span class="operator">=</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>(FilterCondition.AND,</span><br><span class="line">            Student.class, Student::getAge,</span><br><span class="line">            FilterOperator.EQUAL, <span class="string">&quot;3&quot;</span>);</span><br><span class="line">    <span class="comment">// 验证我们设置的筛选属性是否就是age</span></span><br><span class="line">    assertEquals(<span class="string">&quot;age&quot;</span>, filterDescriptor.getPropertyPath());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">lambdaSetPropertyTest</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="type">FilterDescriptor</span> <span class="variable">filterDescriptor</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>();</span><br><span class="line">    filterDescriptor.setPropertyPath(Student.class, Student::getAge);</span><br><span class="line">     <span class="comment">// 验证我们设置的筛选属性是否就是age</span></span><br><span class="line">    assertEquals(<span class="string">&quot;age&quot;</span>, filterDescriptor.getPropertyPath());</span><br><span class="line">      <span class="comment">// 我们尝试使用lambda获取</span></span><br><span class="line">    filterDescriptor.setPropertyPath(Student.class, (s)-&gt; s.getNote());</span><br><span class="line">    assertEquals(<span class="string">&quot;note&quot;</span>, filterDescriptor.getPropertyPath());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>这里我们类似于用lambda 表达式方法获取到属性名字，看似我们绕了很大一个圈子去做了这件事，当然我们写实一个String 也可以，但是这样做是有几个好处的：</p>
+<ol>
+<li>当编写的时候，不用特意去记住属性名字，IDE智能提醒找到对应的get方法。</li>
+<li>当修改属性的时候，你改变了属性名字，当你修改get方法，其他地方也会相应有提示改动。</li>
+<li>避免sonar 报错，sonar当你string 有三处一样的时候就会报错。（我去……是强凑了一个）</li>
+</ol>
+<h2 id="关注-我"><a href="#关注-我" class="headerlink" title="关注@我　##"></a>关注@我　##</h2><p>最后大家可以关注我和 Mybatis-Dynamic-query项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query" data-size="large" data-show-count="true" aria-label="Star wz2cool/mybatis-dynamic-query on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query/fork" data-size="large" data-show-count="true" aria-label="Fork wz2cool/mybatis-dynamic-query on GitHub">Fork</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/07/31/propertyExpression/" data-title="Mybatis Dynamic Query 属性表达式 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/07/31/joinView/" title="Mybatis Dynamic Query join视图">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Mybatis Dynamic Query join视图</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/07/31/delete/"  title="Mybatis Dynamic Query 删除">
+ <strong>NEXT:</strong><br/> 
+ <span>Mybatis Dynamic Query 删除
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%B0%81%E8%A3%85"><span class="toc-number">2.</span> <span class="toc-text">简单封装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A6%E5%AE%9A"><span class="toc-number">2.1.</span> <span class="toc-text">约定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">实际应用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">3.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8-%E6%88%91"><span class="toc-number">4.</span> <span class="toc-text">关注@我　##</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

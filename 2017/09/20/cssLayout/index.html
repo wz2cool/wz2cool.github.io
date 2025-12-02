@@ -1,0 +1,404 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>简单 CSS 布局 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="CSS LayoutCSS Layout 是对上下左右布局的一个简单封装，主要针对自己项目里面方便使用。坚持组合大于继承的原则，复杂的布局也是由简单布局组成的。所以不习惯margin&amp;#x2F;padding-top&amp;#x2F;right&amp;#x2F;bottom&amp;#x2F;left-*的同学可以忽略">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/09/20/cssLayout/" title="简单 CSS 布局" itemprop="url">简单 CSS 布局</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-09-20T06:00:27.000Z" itemprop="datePublished">2017-09-20</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.515Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CSS-Layout"><span class="toc-number">1.</span> <span class="toc-text">CSS Layout</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#fill"><span class="toc-number">1.1.</span> <span class="toc-text">.fill</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fill-height"><span class="toc-number">1.2.</span> <span class="toc-text">.fill-height</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fill-width"><span class="toc-number">1.3.</span> <span class="toc-text">.fill-width</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-right"><span class="toc-number">1.4.</span> <span class="toc-text">.float-right</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-left"><span class="toc-number">1.5.</span> <span class="toc-text">.float-left</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#margin-top-right-bottom-left-xx"><span class="toc-number">1.6.</span> <span class="toc-text">.margin-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#padding-top-right-bottom-left-xx"><span class="toc-number">1.7.</span> <span class="toc-text">.padding-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#horizontal-container"><span class="toc-number">1.8.</span> <span class="toc-text">.horizontal-container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-right"><span class="toc-number">1.8.1.</span> <span class="toc-text">.fill-right</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-left"><span class="toc-number">1.8.2.</span> <span class="toc-text">.fill-left</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vertical-container"><span class="toc-number">1.9.</span> <span class="toc-text">.vertical-container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-bottom"><span class="toc-number">1.9.1.</span> <span class="toc-text">.fill-bottom</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-top"><span class="toc-number">1.9.2.</span> <span class="toc-text">.fill-top</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#complex-hor-ver-layout"><span class="toc-number">1.10.</span> <span class="toc-text">complex hor-ver layout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-container"><span class="toc-number">1.11.</span> <span class="toc-text">.center-container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#center-horizontal"><span class="toc-number">1.11.1.</span> <span class="toc-text">.center-horizontal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#center-vertical"><span class="toc-number">1.11.2.</span> <span class="toc-text">.center-vertical</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ver-hor-center"><span class="toc-number">1.12.</span> <span class="toc-text">ver-hor center</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91"><span class="toc-number">1.13.</span> <span class="toc-text">关注我　##</span></a></li></ol></li></ol>
+		</div>
+		
+		<h1 id="CSS-Layout"><a href="#CSS-Layout" class="headerlink" title="CSS Layout"></a>CSS Layout</h1><p>CSS Layout 是对上下左右布局的一个简单封装，主要针对自己项目里面方便使用。<br>坚持组合大于继承的原则，复杂的布局也是由简单布局组成的。<br>所以不习惯margin&#x2F;padding-top&#x2F;right&#x2F;bottom&#x2F;left-*的同学可以忽略。<br>大家可以使用免费cdn 做测试： <a href="https://gitcdn.xyz/repo/wz2cool/css_layout/0.1/dist/layout.min.css">https://gitcdn.xyz/repo/wz2cool/css_layout/0.1/dist/layout.min.css</a><br>（PS: 非前端专攻人士，至于你们觉得好不好，反正我是用的挺爽的^_^）<br>项目地址：<a href="https://github.com/wz2cool/css_layout">https://github.com/wz2cool/css_layout</a>  </p>
+<h2 id="fill"><a href="#fill" class="headerlink" title=".fill"></a>.fill</h2><p>填充父节点全部空间。</p>
+<h2 id="fill-height"><a href="#fill-height" class="headerlink" title=".fill-height"></a>.fill-height</h2><p>填充父节点高度空间。</p>
+<h2 id="fill-width"><a href="#fill-width" class="headerlink" title=".fill-width"></a>.fill-width</h2><p>填充父节点宽度空间。</p>
+<h2 id="float-right"><a href="#float-right" class="headerlink" title=".float-right"></a>.float-right</h2><p>向右浮动。</p>
+<h2 id="float-left"><a href="#float-left" class="headerlink" title=".float-left"></a>.float-left</h2><p>向左浮动。</p>
+<h2 id="margin-top-right-bottom-left-xx"><a href="#margin-top-right-bottom-left-xx" class="headerlink" title=".margin-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx"></a>.margin-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx</h2><p>margin 的上下左右</p>
+<h2 id="padding-top-right-bottom-left-xx"><a href="#padding-top-right-bottom-left-xx" class="headerlink" title=".padding-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx"></a>.padding-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx</h2><p>padding 的上下左右</p>
+<h2 id="horizontal-container"><a href="#horizontal-container" class="headerlink" title=".horizontal-container"></a>.horizontal-container</h2><h3 id="fill-right"><a href="#fill-right" class="headerlink" title=".fill-right"></a>.fill-right</h3><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/fill-right.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;horizontal-container fill-right&quot;</span> <span class="attr">style</span>=<span class="string">&quot;height: 100px;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left-panel fill-height&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD; width: 150px;&quot;</span>&gt;</span></span><br><span class="line">        left panel (auto)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right-panel fill-height&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #7171D1;&quot;</span>&gt;</span></span><br><span class="line">        right panel (fill rest)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a href="https://jsfiddle.net/n26b2yqr/">在线demo</a></p>
+<h3 id="fill-left"><a href="#fill-left" class="headerlink" title=".fill-left"></a>.fill-left</h3><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/fill-left.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;horizontal-container fill-left&quot;</span> <span class="attr">style</span>=<span class="string">&quot;height: 100px;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right-panel fill-height&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #7171D1;  width: 150px;&quot;</span>&gt;</span></span><br><span class="line">        right panel (auto)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left-panel fill-height&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD;&quot;</span>&gt;</span></span><br><span class="line">        left panel (fill rest)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a href="https://jsfiddle.net/tg0gf05k/">在线demo</a></p>
+<h2 id="vertical-container"><a href="#vertical-container" class="headerlink" title=".vertical-container"></a>.vertical-container</h2><h3 id="fill-bottom"><a href="#fill-bottom" class="headerlink" title=".fill-bottom"></a>.fill-bottom</h3><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/fill-bottom.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;vertical-container fill-bottom&quot;</span> <span class="attr">style</span>=<span class="string">&quot;height: 400px;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;top-panel&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD; height: 100px;&quot;</span>&gt;</span></span><br><span class="line">        top panel (auto)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bottom-panel&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #7171D1;&quot;</span>&gt;</span></span><br><span class="line">        bottom panel (fill rest)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a href="https://jsfiddle.net/zc8myc3m/">在线demo</a></p>
+<h3 id="fill-top"><a href="#fill-top" class="headerlink" title=".fill-top"></a>.fill-top</h3><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/fill-top.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;vertical-container fill-top&quot;</span> <span class="attr">style</span>=<span class="string">&quot;height: 400px;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;top-panel&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD; &quot;</span>&gt;</span></span><br><span class="line">        top panel (fill rest)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bottom-panel&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #7171D1;height: 100px;&quot;</span>&gt;</span></span><br><span class="line">        bottom panel (auto)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a href="https://jsfiddle.net/jms2Lejn/">在线demo</a></p>
+<h2 id="complex-hor-ver-layout"><a href="#complex-hor-ver-layout" class="headerlink" title="complex hor-ver layout"></a>complex hor-ver layout</h2><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/complex-layout.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;vertical-container fill-bottom&quot;</span> <span class="attr">style</span>=<span class="string">&quot;height:300px;&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;top-panel&quot;</span>&gt;</span></span><br><span class="line">        top (auto)</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bottom-panel&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- need fill height width --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;vertical-container fill-top fill&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;top-panel&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left-panel fill-height&quot;</span>&gt;</span></span><br><span class="line">                    left (auto)</span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right-panel fill-height&quot;</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;horizontal-container fill-left fill&quot;</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;right-panel fill-height&quot;</span>&gt;</span></span><br><span class="line">                            right(auto)</span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;left-panel fill-height&quot;</span>&gt;</span></span><br><span class="line">                            center</span><br><span class="line">                        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;bottom-panel&quot;</span>&gt;</span></span><br><span class="line">            bottom panel (auto)</span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="center-container"><a href="#center-container" class="headerlink" title=".center-container"></a>.center-container</h2><h3 id="center-horizontal"><a href="#center-horizontal" class="headerlink" title=".center-horizontal"></a>.center-horizontal</h3><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/hor-center.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-container center-horizontal&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD; width: 200px; height: 50px&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-panel&quot;</span>&gt;</span></span><br><span class="line">        center item</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="center-vertical"><a href="#center-vertical" class="headerlink" title=".center-vertical"></a>.center-vertical</h3><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/ver-center.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-container center-vertical&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD; width: 200px; height: 50px&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-panel&quot;</span>&gt;</span></span><br><span class="line">        center item</span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ver-hor-center"><a href="#ver-hor-center" class="headerlink" title="ver-hor center"></a>ver-hor center</h2><p><img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/ver-hor-center.png"></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-container center-vertical&quot;</span> <span class="attr">style</span>=<span class="string">&quot;background: #EE91AD; width: 200px; height: 50px&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-panel&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-container center-horizontal&quot;</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;center-panel&quot;</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">span</span>&gt;</span>*<span class="tag">&lt;/<span class="name">span</span>&gt;</span> center item</span><br><span class="line">            <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="关注我"><a href="#关注我" class="headerlink" title="关注我　##"></a>关注我　##</h2><p>最后大家可以关注我和 css_layout项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/css_layout" data-size="large" data-show-count="true" aria-label="Star wz2cool/css_layout on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/css_layout/fork" data-size="large" data-show-count="true" aria-label="Fork wz2cool/css_layout on GitHub">Fork</a></p>
+<script async defer src="https://buttons.github.io/buttons.js"></script>  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/css/">css</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/09/20/cssLayout/" data-title="简单 CSS 布局 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/10/05/mdq2-2/" title="mdq2.2">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  mdq2.2</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/08/15/howToUse2/"  title="Mybatis Dynamic Query 2.0 入门">
+ <strong>NEXT:</strong><br/> 
+ <span>Mybatis Dynamic Query 2.0 入门
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CSS-Layout"><span class="toc-number">1.</span> <span class="toc-text">CSS Layout</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#fill"><span class="toc-number">1.1.</span> <span class="toc-text">.fill</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fill-height"><span class="toc-number">1.2.</span> <span class="toc-text">.fill-height</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fill-width"><span class="toc-number">1.3.</span> <span class="toc-text">.fill-width</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-right"><span class="toc-number">1.4.</span> <span class="toc-text">.float-right</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#float-left"><span class="toc-number">1.5.</span> <span class="toc-text">.float-left</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#margin-top-right-bottom-left-xx"><span class="toc-number">1.6.</span> <span class="toc-text">.margin-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#padding-top-right-bottom-left-xx"><span class="toc-number">1.7.</span> <span class="toc-text">.padding-&#x2F;top&#x2F;right&#x2F;bottom&#x2F;left-xx</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#horizontal-container"><span class="toc-number">1.8.</span> <span class="toc-text">.horizontal-container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-right"><span class="toc-number">1.8.1.</span> <span class="toc-text">.fill-right</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-left"><span class="toc-number">1.8.2.</span> <span class="toc-text">.fill-left</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vertical-container"><span class="toc-number">1.9.</span> <span class="toc-text">.vertical-container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-bottom"><span class="toc-number">1.9.1.</span> <span class="toc-text">.fill-bottom</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fill-top"><span class="toc-number">1.9.2.</span> <span class="toc-text">.fill-top</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#complex-hor-ver-layout"><span class="toc-number">1.10.</span> <span class="toc-text">complex hor-ver layout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#center-container"><span class="toc-number">1.11.</span> <span class="toc-text">.center-container</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#center-horizontal"><span class="toc-number">1.11.1.</span> <span class="toc-text">.center-horizontal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#center-vertical"><span class="toc-number">1.11.2.</span> <span class="toc-text">.center-vertical</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ver-hor-center"><span class="toc-number">1.12.</span> <span class="toc-text">ver-hor center</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E6%88%91"><span class="toc-number">1.13.</span> <span class="toc-text">关注我　##</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

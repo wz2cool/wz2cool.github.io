@@ -1,0 +1,395 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>在typescript 编写swagger 文档 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="项目地址：https://github.com/wz2cool/swagger-ts-docdemo代码地址：https://github.com/wz2cool/swagger-ts-doc-demo
+动机Swagger API 文档框架相信大家都使用过，并且真的很方便，但是大家应该都是用框架生成">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2018/04/14/swagger-ts-doc-start/" title="在typescript 编写swagger 文档" itemprop="url">在typescript 编写swagger 文档</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2018-04-14T09:42:11.000Z" itemprop="datePublished">2018-04-14</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.575Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Swagger-%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">Swagger 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#info"><span class="toc-number">2.1.</span> <span class="toc-text">info</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#definitions"><span class="toc-number">2.2.</span> <span class="toc-text">definitions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paths"><span class="toc-number">2.3.</span> <span class="toc-text">paths</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#swagger-ts-doc-%E4%B8%AD%E7%B1%BB%E5%92%8C%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">swagger-ts-doc 中类和方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#apiModelProperty-%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">3.1.</span> <span class="toc-text">apiModelProperty 装饰器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Request%E5%8F%82%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">Request参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reponse"><span class="toc-number">3.3.</span> <span class="toc-text">Reponse</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#registerRequestMapping-%E6%96%B9%E6%B3%95"><span class="toc-number">3.4.</span> <span class="toc-text">registerRequestMapping 方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">4.</span> <span class="toc-text">结束</span></a></li></ol>
+		</div>
+		
+		<p>项目地址：<a href="https://github.com/wz2cool/swagger-ts-doc">https://github.com/wz2cool/swagger-ts-doc</a><br>demo代码地址：<a href="https://github.com/wz2cool/swagger-ts-doc-demo">https://github.com/wz2cool/swagger-ts-doc-demo</a></p>
+<h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>Swagger API 文档框架相信大家都使用过，并且真的很方便，但是大家应该都是用框架生成的出来swagger 文档，可能很少人会去写 yaml文档吧。<br>确实我在使用nodejs 发现写接口还是很方便，但是唯独在写swagger文档时候发现nodejs中的框架并不好用，曾经用过swagger-jsdoc,写了一堆注释，然后自己崩溃了。<br>好歹我自己也写了快2年的java了，为什么不照着java的方式写一套呢，于是写了 swagger-ts-doc，自用下来还是挺方便的。</p>
+<h1 id="Swagger-简介"><a href="#Swagger-简介" class="headerlink" title="Swagger 简介"></a>Swagger 简介</h1><p>大家可打开一下 <a href="http://editor.swagger.io/">http://editor.swagger.io/</a> 看一下官方写的一个例子。</p>
+<h2 id="info"><a href="#info" class="headerlink" title="info"></a>info</h2><p>这个应该是一些对这个文档的描述信息，这个在swagger-ts-doc 是可以配置的, 对应的配置为 SwaggerInfoProperty。</p>
+<h2 id="definitions"><a href="#definitions" class="headerlink" title="definitions"></a>definitions</h2><p>这个是一个重要的节点，这个节点其实是定义了我们所有的类，比如有个requestBody 其实是一个类，就可以通过  $ref: “#&#x2F;definitions&#x2F;User” 进行关联。<br>在swagger-ts-doc 中，这里的是通过apiModelProperty进行描述的</p>
+<h2 id="paths"><a href="#paths" class="headerlink" title="paths"></a>paths</h2><p>这个节点就是最重要的节点，它描述了我们所有路由post,get,put,delete.<br>在swagger-ts-doc 中，这里是通过registerRequestMapping 进行描述的。</p>
+<h1 id="swagger-ts-doc-中类和方法"><a href="#swagger-ts-doc-中类和方法" class="headerlink" title="swagger-ts-doc 中类和方法"></a>swagger-ts-doc 中类和方法</h1><h2 id="apiModelProperty-装饰器"><a href="#apiModelProperty-装饰器" class="headerlink" title="apiModelProperty 装饰器"></a>apiModelProperty 装饰器</h2><p>这个装饰器主要是为了生成 definitions 中的model，我们看代码可看到如何描述一个typescript中的一个类。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; apiModelProperty, <span class="title class_">DataType</span> &#125; <span class="keyword">from</span> <span class="string">&quot;swagger-ts-doc&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> <span class="title class_">UpdateStudentDto</span> &#123;</span><br><span class="line">    @<span class="title function_">apiModelProperty</span>(</span><br><span class="line">        <span class="title class_">DataType</span>.<span class="property">STRING</span>,  <span class="comment">// 类型</span></span><br><span class="line">        <span class="literal">false</span>, <span class="comment">// 是否必填</span></span><br><span class="line">        <span class="string">&quot;学生姓名&quot;</span> <span class="comment">// 描述</span></span><br><span class="line">        )</span><br><span class="line">    public <span class="attr">name</span>: string;</span><br><span class="line">    @<span class="title function_">apiModelProperty</span>(<span class="title class_">DataType</span>.<span class="property">INTEGER</span>, <span class="literal">false</span>, <span class="string">&quot;学生年龄&quot;</span>)</span><br><span class="line">    public <span class="attr">age</span>: number;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后会生成与之对应的swagger json 描述（这里我们不使用yaml语法，使用的json 语法）</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;UpdateStudentDto&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;object&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;required&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="string">&quot;name&quot;</span><span class="punctuation">,</span> <span class="string">&quot;age&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">	<span class="attr">&quot;properties&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">		<span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">			<span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;string&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;学生姓名&quot;</span></span><br><span class="line">		<span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">		<span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">			<span class="attr">&quot;type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;integer&quot;</span><span class="punctuation">,</span></span><br><span class="line">			<span class="attr">&quot;description&quot;</span><span class="punctuation">:</span> <span class="string">&quot;学生年龄&quot;</span></span><br><span class="line">		<span class="punctuation">&#125;</span></span><br><span class="line">	<span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+<h2 id="Request参数"><a href="#Request参数" class="headerlink" title="Request参数"></a>Request参数</h2><p>参考swagger 文档：<br><a href="https://swagger.io/docs/specification/describing-parameters/">https://swagger.io/docs/specification/describing-parameters/</a><br><a href="https://swagger.io/docs/specification/describing-request-body/">https://swagger.io/docs/specification/describing-request-body/</a>   </p>
+<ul>
+<li>RequestBody 类对应文档 requestBody</li>
+<li>PathVariable 类对应文档 path parameters （in: path)</li>
+<li>RequestParam 类对弈文档 query parameters （in: query)</li>
+</ul>
+<h2 id="Reponse"><a href="#Reponse" class="headerlink" title="Reponse"></a>Reponse</h2><p>参考swagger 文档：<br><a href="https://swagger.io/docs/specification/describing-responses/">https://swagger.io/docs/specification/describing-responses/</a><br>我们看一下定义多个返回相应</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">OK</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;ok&quot;</span>),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">INTERNAL_SERVER_ERROR</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;内部错误&quot;</span>),</span><br><span class="line">    <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">NOT_FOUND</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;学生未找到&quot;</span>),</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<h2 id="registerRequestMapping-方法"><a href="#registerRequestMapping-方法" class="headerlink" title="registerRequestMapping 方法"></a>registerRequestMapping 方法</h2><p>这里就是我们要去生成swagger中paths节点调用的方法，这里我们举一个修改学生的一个例子。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"> <span class="title function_">registerRequestMapping</span>(</span><br><span class="line">    <span class="title class_">StudentApi</span>, <span class="comment">// tags 类似于把一些路由放到一个组里面</span></span><br><span class="line">    <span class="string">&quot;/students/&#123;id&#125;&quot;</span>, <span class="comment">// 路由</span></span><br><span class="line">    <span class="title class_">RequestMethod</span>.<span class="property">PUT</span>,</span><br><span class="line">    [</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">PathVariable</span>(<span class="string">&quot;id&quot;</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;学生ID&quot;</span>),</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">RequestBody</span>(<span class="string">&quot;student&quot;</span>, <span class="title class_">DataType</span>.<span class="property">OBJECT</span>, <span class="title class_">UpdateStudentDto</span>, <span class="string">&quot;学生&quot;</span>),</span><br><span class="line">    ],</span><br><span class="line">    [</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">OK</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;ok&quot;</span>),</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">INTERNAL_SERVER_ERROR</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;内部错误&quot;</span>),</span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Response</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">NOT_FOUND</span>, <span class="title class_">DataType</span>.<span class="property">STRING</span>, <span class="string">&quot;学生未找到&quot;</span>),</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">&quot;修改学生&quot;</span>); <span class="comment">// 对这个路由的描述</span></span><br><span class="line">route.<span class="title function_">put</span>(<span class="string">&quot;/:id&quot;</span>, <span class="function">(<span class="params">req, res, next</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> input = req.<span class="property">body</span>;</span><br><span class="line">    <span class="keyword">const</span> id = req.<span class="property">params</span>.<span class="property">id</span>;</span><br><span class="line">    <span class="keyword">if</span> (!id) &#123;</span><br><span class="line">        res.<span class="title function_">status</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">INTERNAL_SERVER_ERROR</span>);</span><br><span class="line">        res.<span class="title function_">json</span>(<span class="string">&quot;学生ID不能为空&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (lodash.<span class="title function_">findIndex</span>(<span class="variable language_">this</span>.<span class="property">students</span>, <span class="function">(<span class="params">x</span>) =&gt;</span> x.<span class="property">uuid</span> === id) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        res.<span class="title function_">status</span>(<span class="title class_">HttpStatusCode</span>.<span class="property">NOT_FOUND</span>);</span><br><span class="line">        res.<span class="title function_">json</span>(<span class="string">`未能找到学生`</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> student = <span class="keyword">new</span> <span class="title class_">Student</span>();</span><br><span class="line">    student.<span class="property">uuid</span> = id;</span><br><span class="line">    student.<span class="property">name</span> = input.<span class="property">name</span>;</span><br><span class="line">    student.<span class="property">age</span> = input.<span class="property">age</span>;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">modifyStudent</span>(student);</span><br><span class="line">    res.<span class="title function_">json</span>(<span class="string">&quot;ok&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们最后看一下效果<br> <img src="https://raw.githubusercontent.com/wz2cool/markdownPhotos/master/res/swagger-result.png"></p>
+<h1 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h1><p>利用typescript 现在我们可以轻松用强类型来写swagger文档了，swagger-jsdoc 虽然很好但是写起来太痛苦了，希望大家可以关注swagger-ts-doc 并提出宝贵的意见。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/typescript/">typescript</a><a href="/tags/swagger/">swagger</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2018/04/14/swagger-ts-doc-start/" data-title="在typescript 编写swagger 文档 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2018/09/11/ts-commons/" title="ts-commons 简介">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  ts-commons 简介</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/11/23/tsbatis-tools/"  title="tsbatis-tools 批量Entity导出">
+ <strong>NEXT:</strong><br/> 
+ <span>tsbatis-tools 批量Entity导出
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">动机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Swagger-%E7%AE%80%E4%BB%8B"><span class="toc-number">2.</span> <span class="toc-text">Swagger 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#info"><span class="toc-number">2.1.</span> <span class="toc-text">info</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#definitions"><span class="toc-number">2.2.</span> <span class="toc-text">definitions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#paths"><span class="toc-number">2.3.</span> <span class="toc-text">paths</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#swagger-ts-doc-%E4%B8%AD%E7%B1%BB%E5%92%8C%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">swagger-ts-doc 中类和方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#apiModelProperty-%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">3.1.</span> <span class="toc-text">apiModelProperty 装饰器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Request%E5%8F%82%E6%95%B0"><span class="toc-number">3.2.</span> <span class="toc-text">Request参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reponse"><span class="toc-number">3.3.</span> <span class="toc-text">Reponse</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#registerRequestMapping-%E6%96%B9%E6%B3%95"><span class="toc-number">3.4.</span> <span class="toc-text">registerRequestMapping 方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">4.</span> <span class="toc-text">结束</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

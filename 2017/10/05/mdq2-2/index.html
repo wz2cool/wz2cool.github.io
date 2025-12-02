@@ -1,0 +1,403 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>mdq2.2 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="项目地址：https://github.com/wz2cool/mybatis-dynamic-query文档地址：https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/
+杂谈不知道有多少人在用MDQ(Mybatis Dyna">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/10/05/mdq2-2/" title="mdq2.2" itemprop="url">mdq2.2</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-10-05T06:54:48.000Z" itemprop="datePublished">2017-10-05</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.549Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%82%E8%B0%88"><span class="toc-number">1.</span> <span class="toc-text">杂谈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%AF%B9%E8%B4%A8%E7%96%91"><span class="toc-number">2.</span> <span class="toc-text">面对质疑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">2.2 更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%88%97"><span class="toc-number">3.1.</span> <span class="toc-text">查询列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AD%9B%E9%80%89"><span class="toc-number">3.2.</span> <span class="toc-text">自定义筛选</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">链式调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">4.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8-%E6%88%91"><span class="toc-number">5.</span> <span class="toc-text">关注@我　##</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E6%95%B4%E5%90%88"><span class="toc-number">6.</span> <span class="toc-text">文章整合</span></a></li></ol>
+		</div>
+		
+		<p>项目地址：<a href="https://github.com/wz2cool/mybatis-dynamic-query">https://github.com/wz2cool/mybatis-dynamic-query</a><br>文档地址：<a href="https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/">https://wz2cool.gitbooks.io/mybatis-dynamic-query-zh-cn/content/</a></p>
+<h2 id="杂谈"><a href="#杂谈" class="headerlink" title="杂谈"></a>杂谈</h2><p>不知道有多少人在用MDQ(Mybatis Dynamic Query),反正我一直是在我们公司自己项目里用的，总之是不会坑大家的啊。还有毕竟作者也是入java坑不久，欢迎java大神前来指导。</p>
+<h2 id="面对质疑"><a href="#面对质疑" class="headerlink" title="面对质疑"></a>面对质疑</h2><p>当然有人一开始真心接受不了我这套，无非就几点：</p>
+<ul>
+<li>问题1：来个新人还要学习MDQ，只理解Mybatis上手要容易的多。<br>反驳：MDQ没有产生一套新的东西，而是基于Mybatis的一个扩展，理解MDQ对Mybatis更加有帮助。</li>
+<li>问题2：我直接在mybatis里面写sql感觉写起来比较快。<br>反驳：一开始你是写起来快，最开始你只写几个查询，随着业务扩展，你要写的筛选和排序会越来越多，更可怕的事，你全部写在xml中，想想你以后要维护一个弱类型的东西…</li>
+<li>问题3：你写的东西感觉不靠谱。<br>反驳：大神写的同样有bug，好的代码需要反复重构，并且保持良好的单元测试，这个是不变的真理，有问题可以，大家讨论一下解决即可。</li>
+</ul>
+<h2 id="2-2-更新"><a href="#2-2-更新" class="headerlink" title="2.2 更新"></a>2.2 更新</h2><p>更新了三点：  </p>
+<ol>
+<li>原来是有自定义筛选的，现在添加了自定义排序。</li>
+<li>设计MDQ的目的就是为了可维护性，所以这次添加了获取查询列，即[tableName].[columnName] 这种形式。</li>
+<li>链式调用，等下看例子就明白了。</li>
+</ol>
+<h3 id="查询列"><a href="#查询列" class="headerlink" title="查询列"></a>查询列</h3><p>这个查询列大家可能有点云里雾里，列就叫列，为什么叫查询列。其实MDQ工作的时候对数据库查询是[tableName].[columnName], 这样做有个好处就是当我们join表的时候，我们可以指定这个列是哪里来的，保证查询的正确性。<br>当然你这个拼接工作是由MDQ完成的，我们只需要在@Column 这个注解设计 tableOrAlias 和name 两个属性即可。当然为什么要这个查询列，我在下面的自定义排序中说明。<br>下面我们来看个例子，还是用我们经典的ProductView。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductView</span> &#123;</span><br><span class="line">    <span class="meta">@Column(name = &quot;product_id&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long productID;</span><br><span class="line">    <span class="meta">@Column(name = &quot;product_name&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String productName;</span><br><span class="line">    <span class="meta">@Column(name = &quot;price&quot;, table = &quot;product&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> BigDecimal price;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column(name = &quot;category_id&quot;, table = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long categoryID;</span><br><span class="line">    <span class="meta">@Column(name = &quot;category_name&quot;, table = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String categoryName;</span><br><span class="line">    <span class="meta">@Column(name = &quot;description&quot;, table = &quot;category&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testGetQueryColumn</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">productIdColumn</span> <span class="operator">=</span> MybatisQueryProvider.getQueryColumn(</span><br><span class="line">            ProductView.class, productView -&gt; productView.getProductID());</span><br><span class="line">    <span class="comment">// 这里我们就可以看到期望的输出结果就是 [tableName].[columnName]</span></span><br><span class="line">    assertEquals(<span class="string">&quot;product.product_id&quot;</span>, productIdColumn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义筛选"><a href="#自定义筛选" class="headerlink" title="自定义筛选"></a>自定义筛选</h3><p>其实和自定义筛选类似，就是我们可以hardcode 一小段我们自己的sql（虽然觉得不是很好）。<br>当然下面例子也会使用到查询列。<br>现在我们有个需求，我们需要把ProductID是2的产品放到第一个，常规的升序降序都不能满足我们，我们该怎么办呢，恩 我们重新自定义一下排序权重即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testCustomSort</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">idQueryColumn</span> <span class="operator">=</span> MybatisQueryProvider.getQueryColumn(ProductView.class, ProductView::getProductID);</span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> queryColumn cannot be parameter.</span></span><br><span class="line">    <span class="comment">// 这里注意：列不能当做参数，否则会报错，所以我们字符串拼接出来。</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">customSortExpression</span> <span class="operator">=</span></span><br><span class="line">            String.format(<span class="string">&quot;CASE %s WHEN &#123;0&#125; THEN &#123;1&#125; ELSE product.product_id END DESC&quot;</span>, idQueryColumn);</span><br><span class="line">    <span class="type">CustomSortDescriptor</span> <span class="variable">id2TopSort</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CustomSortDescriptor</span>();</span><br><span class="line">    id2TopSort.setExpression(customSortExpression);</span><br><span class="line">    <span class="comment">// 当id是2的时候，我们权重直接给int 最大值</span></span><br><span class="line">    id2TopSort.setParams(<span class="number">2</span>, Integer.MAX_VALUE);</span><br><span class="line">    Map&lt;String, Object&gt; queryParam =</span><br><span class="line">        MybatisQueryProvider.createInstance(ProductView.class)</span><br><span class="line">            .addSorts(<span class="string">&quot;orderExpression&quot;</span>, id2TopSort)</span><br><span class="line">            .toQueryParam();</span><br><span class="line">    List&lt;ProductView&gt; productList = northwindDao.getProductViewsByDynamic(queryParam);</span><br><span class="line">    assertEquals(Long.valueOf(<span class="number">2</span>), productList.get(<span class="number">0</span>).getProductID());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们看一下输出结果，2的产品排序到了最上面去了。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT * FROM product LEFT JOIN category ON product.category_id = category.category_id ORDER BY CASE product.product_id WHEN ? THEN ? ELSE product.product_id END DESC </span><br><span class="line">==&gt; Parameters: 2(Integer), 2147483647(Integer)</span><br><span class="line">&lt;==    Columns: PRODUCT_ID, CATEGORY_ID, PRODUCT_NAME, PRICE, CATEGORY_ID, CATEGORY_NAME, DESCRIPTION</span><br><span class="line">&lt;==        Row: 2, 2, Northwind Traders Syrup, 7.5000, 2, Condiments, test</span><br><span class="line">&lt;==        Row: 4, 3, Northwind Traders Olive Oil, 16.5000, 3, Oil, test</span><br><span class="line">&lt;==        Row: 3, 2, Northwind Traders Cajun Seasoning, 16.5000, 2, Condiments, test</span><br><span class="line">&lt;==        Row: 1, 1, Northwind Traders Chai, 18.0000, 1, Beverages, test</span><br><span class="line">&lt;==      Total: 4</span><br></pre></td></tr></table></figure>
+
+<h3 id="链式调用"><a href="#链式调用" class="headerlink" title="链式调用"></a>链式调用</h3><p>这个应该是我在哪本java 文章看过，反正感觉不错啊。<br>以前的调用我们非要组织一个DynamicQuery类，然后调用一个静态方法生成一个参数Map，有了链式调用我们写代码就方便了很多。<br>看我们一个步骤，创建帮助类-》添加筛选-》添加排序-》转化成参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMultiTablesFilter</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">FilterDescriptor</span> <span class="variable">priceFilter1</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>(ProductView.class, ProductView::getPrice,</span><br><span class="line">                        FilterOperator.GREATER_THAN_OR_EQUAL, <span class="number">6</span>);</span><br><span class="line">        <span class="type">FilterDescriptor</span> <span class="variable">priceFilter2</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>(ProductView.class, ProductView::getPrice,</span><br><span class="line">                        FilterOperator.LESS_THAN, <span class="number">10</span>);</span><br><span class="line">        <span class="type">FilterDescriptor</span> <span class="variable">categoryNameFilter</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">FilterDescriptor</span>(ProductView.class, ProductView::getCategoryName,</span><br><span class="line">                        FilterOperator.START_WITH, <span class="string">&quot;Co&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="type">SortDescriptor</span> <span class="variable">idDescSort</span> <span class="operator">=</span></span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">SortDescriptor</span>(ProductView.class, ProductView::getProductID, SortDirection.DESC);</span><br><span class="line"></span><br><span class="line">        Map&lt;String, Object&gt; params =</span><br><span class="line">                <span class="comment">// <span class="doctag">NOTE:</span> we recommend you to set &quot;columnsExpressionPlaceholder&quot;</span></span><br><span class="line">                <span class="comment">// in case of duplicated column name in two tables.</span></span><br><span class="line">                <span class="comment">// 这里你也可以不给列的站位，但是推荐使用，防止两个表有重复的名字</span></span><br><span class="line">                MybatisQueryProvider</span><br><span class="line">                        .createInstance(ProductView.class, <span class="string">&quot;columnsExpression&quot;</span>)</span><br><span class="line">                        .addFilters(<span class="string">&quot;whereExpression&quot;</span>,</span><br><span class="line">                                priceFilter1, priceFilter2, categoryNameFilter)</span><br><span class="line">                        .addSorts(<span class="string">&quot;orderExpression&quot;</span>, idDescSort)</span><br><span class="line">                        .toQueryParam();</span><br><span class="line"></span><br><span class="line">        List&lt;ProductView&gt; result = northwindDao.getProductViewsByDynamic(params);</span><br><span class="line">        assertEquals(<span class="literal">true</span>, result.size() &gt; <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看一下输出结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">==&gt;  Preparing: SELECT product.product_id AS product_id, product.price AS price, category.description AS description, category.category_name AS category_name, product.product_name AS product_name, category.category_id AS category_id FROM product LEFT JOIN category ON product.category_id = category.category_id WHERE (product.price &gt;= ? AND product.price &lt; ? AND category.category_name LIKE ?) ORDER BY product.product_id DESC </span><br><span class="line">==&gt; Parameters: 6(Integer), 10(Integer), Co%(String)</span><br><span class="line">&lt;==    Columns: PRODUCT_ID, PRICE, DESCRIPTION, CATEGORY_NAME, PRODUCT_NAME, CATEGORY_ID</span><br><span class="line">&lt;==        Row: 2, 7.5000, test, Condiments, Northwind Traders Syrup, 2</span><br><span class="line">&lt;==      Total: 1</span><br></pre></td></tr></table></figure>
+
+<h2 id="结束"><a href="#结束" class="headerlink" title="结束"></a>结束</h2><p>利用十一的时间更行了2.0.2，欢迎大家节后回来使用。</p>
+<h2 id="关注-我"><a href="#关注-我" class="headerlink" title="关注@我　##"></a>关注@我　##</h2><p>最后大家可以关注我和 Mybatis-Dynamic-query项目 ^_^<br><a class="github-button" href="https://github.com/wz2cool" data-size="large" data-show-count="true" aria-label="Follow @wz2cool on GitHub">Follow @wz2cool</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query" data-size="large" data-show-count="true" aria-label="Star wz2cool/mybatis-dynamic-query on GitHub">Star</a> <a class="github-button" href="https://github.com/wz2cool/mybatis-dynamic-query/fork" data-size="large" data-show-count="true" aria-label="Fork wz2cool/mybatis-dynamic-query on GitHub">Fork</a></p>
+<h2 id="文章整合"><a href="#文章整合" class="headerlink" title="文章整合"></a>文章整合</h2><p><a href="https://wz2cool.github.io/2017/07/25/filterBase/">Mybatis Dynamic Query 简单筛选</a><br><a href="https://wz2cool.github.io/2017/07/28/groupFilter/">Mybatis Dynamic Query 组筛选</a><br><a href="https://wz2cool.github.io/2017/07/28/sort/">Mybatis Dynamic Query 排序</a><br><a href="https://wz2cool.github.io/2017/07/28/filterSort/">Mybatis Dynamic Query 筛选+排序</a><br><a href="https://wz2cool.github.io/2017/07/28/insert/">Mybatis Dynamic Query 插入</a><br><a href="https://wz2cool.github.io/2017/07/31/update/">Mybatis Dynamic Query 更新</a><br><a href="https://wz2cool.github.io/2017/07/31/delete/">Mybatis Dynamic Query 删除</a><br><a href="https://wz2cool.github.io/2017/07/31/propertyExpression/">Mybatis Dynamic Query 属性表达式</a><br><a href="https://wz2cool.github.io/2017/07/31/joinView/">Mybatis Dynamic Query join视图</a><br><a href="https://wz2cool.github.io/2017/08/15/howToUse2/">Mybatis Dynamic Query 2.0 入门</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Mybatis-Dynamic-Query/">Mybatis Dynamic Query</a><a href="/tags/java/">java</a><a href="/tags/MDQ/">MDQ</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2017/10/05/mdq2-2/" data-title="mdq2.2 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2017/10/24/tsbatis-preview/" title="tsbatis-preview">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  tsbatis-preview</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2017/09/20/cssLayout/"  title="简单 CSS 布局">
+ <strong>NEXT:</strong><br/> 
+ <span>简单 CSS 布局
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%82%E8%B0%88"><span class="toc-number">1.</span> <span class="toc-text">杂谈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%AF%B9%E8%B4%A8%E7%96%91"><span class="toc-number">2.</span> <span class="toc-text">面对质疑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-%E6%9B%B4%E6%96%B0"><span class="toc-number">3.</span> <span class="toc-text">2.2 更新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%88%97"><span class="toc-number">3.1.</span> <span class="toc-text">查询列</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E7%AD%9B%E9%80%89"><span class="toc-number">3.2.</span> <span class="toc-text">自定义筛选</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%BE%E5%BC%8F%E8%B0%83%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">链式调用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9D%9F"><span class="toc-number">4.</span> <span class="toc-text">结束</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8-%E6%88%91"><span class="toc-number">5.</span> <span class="toc-text">关注@我　##</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E6%95%B4%E5%90%88"><span class="toc-number">6.</span> <span class="toc-text">文章整合</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

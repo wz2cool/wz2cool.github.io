@@ -1,0 +1,416 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>local-queue 简介 | 忆苦思甜</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="wz2cool">
+    
+    <meta name="description" content="项目地址：https://github.com/wz2cool/local-queue
+简介一直以来我们都可以比较方便时用 jvm 队列比如 LinkedBlockingQueue 做一些缓存, 或者我们想削峰,远程调用使用的是 kafka 或者 rocketmq，这都是非常有用的做法，但是我们可能">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="忆苦思甜" title="忆苦思甜"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="忆苦思甜">忆苦思甜</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:wz2cool.github.io">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2025/01/30/local-queue/" title="local-queue 简介" itemprop="url">local-queue 简介</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="https://wz2cool.github.io" title="wz2cool">wz2cool</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2025-01-30T14:48:22.000Z" itemprop="datePublished">2025-01-30</time>
+    更新日期:<time datetime="2025-11-30T13:36:13.545Z" itemprop="dateModified">2025-11-30</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%86%99%E5%A4%9A%E8%AF%BB"><span class="toc-number">3.1.</span> <span class="toc-text">一写多读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%AD%E7%82%B9%E7%BB%AD%E8%AF%BB"><span class="toc-number">3.2.</span> <span class="toc-text">断点续读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%BD%AE%E4%BD%8D%E7%82%B9"><span class="toc-number">3.3.</span> <span class="toc-text">重置位点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE-position-%E9%87%8D%E7%BD%AE-%E6%8E%A8%E8%8D%90"><span class="toc-number">3.3.1.</span> <span class="toc-text">根据 position 重置 (推荐)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%97%B6%E9%97%B4%E6%88%B3%E9%87%8D%E7%BD%AE%EF%BC%88%E6%8E%A2%E7%B4%A2%E9%98%B6%E6%AE%B5%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">根据时间戳重置（探索阶段）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0-IPC-%E9%80%9A%E4%BF%A1"><span class="toc-number">4.</span> <span class="toc-text">本地 IPC 通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-number">5.</span> <span class="toc-text">结尾</span></a></li></ol>
+		</div>
+		
+		<p>项目地址：<a href="https://github.com/wz2cool/local-queue">https://github.com/wz2cool/local-queue</a></p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>一直以来我们都可以比较方便时用 jvm 队列比如 LinkedBlockingQueue 做一些缓存, 或者我们想削峰,远程调用使用的是 kafka 或者 rocketmq，这都是非常有用的做法，但是我们可能也会遇到一些问题，<br>对于 jvm 队列</p>
+<ol>
+<li>如果内存队列是无界队列可能会有内存溢出(out-of-memory)的风险</li>
+<li>一但程序关闭，所有在内存中的数据都会丢失，如果没有及时持久化的话数据就没了</li>
+<li>没有位置信息，无法做消费位置移动。</li>
+</ol>
+<p>对于 Kafka&#x2F;rocketmq</p>
+<ol>
+<li>受到网络的影响，如果网络延迟可能会导致消息阻塞的和延迟</li>
+<li>对于特别小的及时消息对于 kafka 不友好，kafka 目标是大吞吐，希望是攒批消息</li>
+<li>受到目标中间件高可用的影响，一但中间件不可用可能会存在丢消息情况</li>
+</ol>
+<p>基于上述情况，我们可以看一下 local-queue，本项目基于 Chronicle 框架封装， Chronicle 是一个微妙级别延迟的框架，并且底层使用的是 mmap 技术，所以如果了解 kafka&#x2F;rocketmq 会非常熟悉，这也使得 local-queue 在延迟上和性能上得到了基础保障。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><ol>
+<li>一写多读</li>
+<li>保留消费者消费位置信息，可以断点续读</li>
+<li>移动消费位点，从新的消费位点续读</li>
+<li>IPC 进程间通信（同一台机器两个 jvm 应用）</li>
+</ol>
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><h3 id="一写多读"><a href="#一写多读" class="headerlink" title="一写多读"></a>一写多读</h3><p>多个消费者可以读取同一份消息，消费者之间不同使用的是 consumerId 的区分，默认情况下消费者都是从最新的位置开始读，如果从最头部开始读会导致瞬发的 IO</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMultiConsumers</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">  <span class="keyword">try</span> (<span class="type">SimpleQueue</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleQueue</span>(config)) &#123;</span><br><span class="line">      <span class="type">Thread</span> <span class="variable">consumer1Thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">          <span class="type">IConsumer</span> <span class="variable">consumer1</span> <span class="operator">=</span> queue.getConsumer(<span class="string">&quot;consumer1&quot;</span>);</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">              <span class="comment">// 阻塞式获取和linkBlockingQueue 一样</span></span><br><span class="line">              <span class="type">QueueMessage</span> <span class="variable">take</span> <span class="operator">=</span> consumer1.take();</span><br><span class="line">              assertEquals(<span class="string">&quot;testContent&quot;</span>, take.getContent());</span><br><span class="line">              assertEquals(<span class="string">&quot;testMessageKey&quot;</span>, take.getMessageKey());</span><br><span class="line">              System.out.println(<span class="string">&quot;consumer1 take message&quot;</span>);</span><br><span class="line">          &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">              Thread.currentThread().interrupt();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      <span class="type">Thread</span> <span class="variable">consumer2Thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">          <span class="type">IConsumer</span> <span class="variable">consumer2</span> <span class="operator">=</span> queue.getConsumer(<span class="string">&quot;consumer2&quot;</span>);</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">              <span class="comment">// 阻塞式获取和linkBlockingQueue 一样</span></span><br><span class="line">              <span class="type">QueueMessage</span> <span class="variable">take</span> <span class="operator">=</span> consumer2.take();</span><br><span class="line">              assertEquals(<span class="string">&quot;testContent&quot;</span>, take.getContent());</span><br><span class="line">              assertEquals(<span class="string">&quot;testMessageKey&quot;</span>, take.getMessageKey());</span><br><span class="line">              System.out.println(<span class="string">&quot;consumer2 take message&quot;</span>);</span><br><span class="line">          &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">              Thread.currentThread().interrupt();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      consumer1Thread.start();</span><br><span class="line">      consumer2Thread.start();</span><br><span class="line">      <span class="comment">// 确保两个消费者开始读准备好了</span></span><br><span class="line">      Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">      <span class="comment">// 写入消息</span></span><br><span class="line">      queue.offer(<span class="string">&quot;testMessageKey&quot;</span>, <span class="string">&quot;testContent&quot;</span>);</span><br><span class="line">      consumer1Thread.join();</span><br><span class="line">      consumer2Thread.join();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="断点续读"><a href="#断点续读" class="headerlink" title="断点续读"></a>断点续读</h3><p>local-queue 支持定时把消费位置存到本地，一般有个 position.dat 文件，如果下一次同一个 consumerId 再开始读的时候会从 position.dat 文件中读取位置，并且从这个位置续读</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testResumeConsumer</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="keyword">try</span> (<span class="type">SimpleQueue</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleQueue</span>(config)) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&quot;key&quot;</span> + i;</span><br><span class="line">            <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;content&quot;</span> + i;</span><br><span class="line">            queue.offer(key, content);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 确保消息全部写入</span></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">consumerId</span> <span class="operator">=</span> <span class="string">&quot;consumer1&quot;</span>;</span><br><span class="line">        <span class="comment">// 从最早的位置开始读，（默认是最新的，如果不用First 会读不到消息），</span></span><br><span class="line">        <span class="comment">// 这里我们是需要关闭所以用了try-with-resources, 一般不需要在queue 这释放</span></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">IConsumer</span> <span class="variable">consumer1</span> <span class="operator">=</span> queue.getConsumer(consumerId, ConsumeFromWhere.FIRST)) &#123;</span><br><span class="line">            <span class="comment">// 确保消息写入缓存</span></span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            List&lt;QueueMessage&gt; queueMessages = consumer1.batchTake(<span class="number">5</span>);</span><br><span class="line">            assertEquals(<span class="number">5</span>, queueMessages.size());</span><br><span class="line">            <span class="type">QueueMessage</span> <span class="variable">lastOne</span> <span class="operator">=</span> queueMessages.get(queueMessages.size() - <span class="number">1</span>);</span><br><span class="line">            assertEquals(<span class="string">&quot;key4&quot;</span>, lastOne.getMessageKey());</span><br><span class="line">            consumer1.ack(queueMessages);</span><br><span class="line">            <span class="comment">// 确保位置写入</span></span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 上面的消费者关闭以后，新开一个同一个consumerId消费者断点续读</span></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">IConsumer</span> <span class="variable">consumer1</span> <span class="operator">=</span> queue.getConsumer(consumerId, ConsumeFromWhere.FIRST)) &#123;</span><br><span class="line">            <span class="comment">// 确保消息写入缓存</span></span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">            List&lt;QueueMessage&gt; queueMessages = consumer1.batchTake(<span class="number">3</span>);</span><br><span class="line">            assertEquals(<span class="number">3</span>, queueMessages.size());</span><br><span class="line">            <span class="type">QueueMessage</span> <span class="variable">lastOne</span> <span class="operator">=</span> queueMessages.get(queueMessages.size() - <span class="number">1</span>);</span><br><span class="line">            assertEquals(<span class="string">&quot;key7&quot;</span>, lastOne.getMessageKey());</span><br><span class="line">            consumer1.ack(queueMessages);</span><br><span class="line">            <span class="comment">// 确保位置写入</span></span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="重置位点"><a href="#重置位点" class="headerlink" title="重置位点"></a>重置位点</h3><p>重置位点应该对 mq 是很重要的一个功能，一般当我们出问题了，希望回放一下数据就需要这个功能</p>
+<h4 id="根据-position-重置-推荐"><a href="#根据-position-重置-推荐" class="headerlink" title="根据 position 重置 (推荐)"></a>根据 position 重置 (推荐)</h4><p>这个是性能非常高的一种重置位点方式，可以从 QueueMessage 获取 position, 以为很多操作都是异步的所以这里 demo 会使用 Thread.sleep 等一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMoveToPosition</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="keyword">try</span> (<span class="type">SimpleQueue</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleQueue</span>(config)) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&quot;key&quot;</span> + i;</span><br><span class="line">            <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;content&quot;</span> + i;</span><br><span class="line">            queue.offer(key, content);</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">IConsumer</span> <span class="variable">consumer1</span> <span class="operator">=</span> queue.getConsumer(<span class="string">&quot;consumer1&quot;</span>, ConsumeFromWhere.FIRST);</span><br><span class="line">        <span class="comment">// 确保消费者缓存填充完毕</span></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        List&lt;QueueMessage&gt; queueMessages = consumer1.batchTake(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">// 尝试取第三位</span></span><br><span class="line">        <span class="type">QueueMessage</span> <span class="variable">example</span> <span class="operator">=</span> queueMessages.get(<span class="number">3</span>);</span><br><span class="line">        consumer1.ack(queueMessages);</span><br><span class="line">        <span class="comment">// 确保ack位点提交</span></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        <span class="comment">// 移动位置到第三个消息位置</span></span><br><span class="line">        <span class="type">boolean</span> <span class="variable">moveToResult</span> <span class="operator">=</span> consumer1.moveToPosition(example.getPosition());</span><br><span class="line">        assertTrue(moveToResult);</span><br><span class="line">        <span class="comment">// 移动完成以后接着读</span></span><br><span class="line">        <span class="type">QueueMessage</span> <span class="variable">takeMessage</span> <span class="operator">=</span> consumer1.take();</span><br><span class="line">        assertEquals(<span class="string">&quot;key3&quot;</span>, takeMessage.getMessageKey());</span><br><span class="line">        assertEquals(example.getPosition(), takeMessage.getPosition());</span><br><span class="line">        assertEquals(example.getMessageKey(), takeMessage.getMessageKey());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="根据时间戳重置（探索阶段）"><a href="#根据时间戳重置（探索阶段）" class="headerlink" title="根据时间戳重置（探索阶段）"></a>根据时间戳重置（探索阶段）</h3><p>通过位置重置位点是一个非常高效的做法，但是往往我们有时候不知道位点，我们想重置到某个时间点上，因为原生不支持，所以先用遍历的方法找到位置，可能会性能上会有些延迟，性能上应该还可以优化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testMoveToTimestamp</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">    <span class="keyword">try</span> (<span class="type">SimpleQueue</span> <span class="variable">queue</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleQueue</span>(config)) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">key</span> <span class="operator">=</span> <span class="string">&quot;key&quot;</span> + i;</span><br><span class="line">            <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;content&quot;</span> + i;</span><br><span class="line">            queue.offer(key, content);</span><br><span class="line">            Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">IConsumer</span> <span class="variable">consumer1</span> <span class="operator">=</span> queue.getConsumer(<span class="string">&quot;consumer1&quot;</span>, ConsumeFromWhere.FIRST);</span><br><span class="line">        <span class="comment">// 确保消费者缓存填充完毕</span></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        List&lt;QueueMessage&gt; queueMessages = consumer1.batchTake(<span class="number">10</span>);</span><br><span class="line">        <span class="comment">// 尝试取第三位</span></span><br><span class="line">        <span class="type">QueueMessage</span> <span class="variable">example</span> <span class="operator">=</span> queueMessages.get(<span class="number">3</span>);</span><br><span class="line">        consumer1.ack(queueMessages);</span><br><span class="line">        <span class="comment">// 确保ack位点提交</span></span><br><span class="line">        Thread.sleep(<span class="number">100</span>);</span><br><span class="line">        <span class="comment">// 移动位置到第三个消息位置, 这次我们取的是时间</span></span><br><span class="line">        <span class="type">long</span> <span class="variable">writeTime</span> <span class="operator">=</span> example.getWriteTime();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">moveToResult</span> <span class="operator">=</span> consumer1.moveToTimestamp(writeTime);</span><br><span class="line">        assertTrue(moveToResult);</span><br><span class="line">        <span class="comment">// 移动完成以后接着读</span></span><br><span class="line">        <span class="type">QueueMessage</span> <span class="variable">takeMessage</span> <span class="operator">=</span> consumer1.take();</span><br><span class="line">        assertEquals(<span class="string">&quot;key3&quot;</span>, takeMessage.getMessageKey());</span><br><span class="line">        assertEquals(example.getPosition(), takeMessage.getPosition());</span><br><span class="line">        assertEquals(example.getMessageKey(), takeMessage.getMessageKey());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="本地-IPC-通信"><a href="#本地-IPC-通信" class="headerlink" title="本地 IPC 通信"></a>本地 IPC 通信</h2><p>local-queue 不光支持多线程操作，而且支持本地多进程操作，我们知道 mmap 就是进程间通信的一种。这里我们不能再使用 SimpleQueue 要使用比较底层的封装 SimpleProducer 和 SimpleConsumer, 和 kafka&#x2F;rocketmq 类似，一个进程生产数据，另外一个进程消费数据。</p>
+<p>生产者程序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Program</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">SimpleProducerConfig</span> <span class="variable">config</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleProducerConfig</span>.Builder()</span><br><span class="line">                .setDataDir(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;./test&quot;</span>))</span><br><span class="line">                <span class="comment">// 保留7天数据</span></span><br><span class="line">                .setKeepDays(<span class="number">7</span>)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">SimpleProducer</span> <span class="variable">producer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleProducer</span>(config)) &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">formattedDateTime</span> <span class="operator">=</span> LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);</span><br><span class="line">                <span class="type">String</span> <span class="variable">message</span> <span class="operator">=</span> <span class="string">&quot;Produce message at: &quot;</span> + formattedDateTime;</span><br><span class="line">                producer.offer(message);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>消费者程序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Program</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">SimpleConsumerConfig</span> <span class="variable">config</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleConsumerConfig</span>.Builder()</span><br><span class="line">                .setDataDir(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;./test&quot;</span>))</span><br><span class="line">                <span class="comment">// 自定义保存位置文件</span></span><br><span class="line">                .setPositionFile(<span class="keyword">new</span> <span class="title class_">File</span>(<span class="string">&quot;./test/myPosition.dat&quot;</span>))</span><br><span class="line">                .setConsumerId(<span class="string">&quot;consumerId&quot;</span>)</span><br><span class="line">                <span class="comment">// 如果没有历史位置，一般从最新位置消费，从头消费会有瞬发消息，所以默认也是ConsumeFromWhere.LAST</span></span><br><span class="line">                .setConsumeFromWhere(ConsumeFromWhere.LAST)</span><br><span class="line">                .build();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> (<span class="type">SimpleConsumer</span> <span class="variable">consumer</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SimpleConsumer</span>(config)) &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="comment">// 阻塞式获取</span></span><br><span class="line">                <span class="type">QueueMessage</span> <span class="variable">message</span> <span class="operator">=</span> consumer.take();</span><br><span class="line">                System.out.println(<span class="string">&quot;[receive:]&quot;</span> + message.getContent());</span><br><span class="line">                consumer.ack(message);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打印出来结果</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">[receive:]Produce message at: 2025-01-31T18:34:11.588</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>local-queue 刚才完成了一个初版，还有很多问题需要优化，大家如果有问题欢迎提出</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/local-queue/">local-queue</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="https://wz2cool.github.io/2025/01/30/local-queue/" data-title="local-queue 简介 | 忆苦思甜" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2025/11/19/mdq3-2-35/" title="mybatis-dynamic-query 3.2.35 更新">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  mybatis-dynamic-query 3.2.35 更新</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2024/05/05/tdq-2-0/"  title="ts-dynamic-query 2.0 更新">
+ <strong>NEXT:</strong><br/> 
+ <span>ts-dynamic-query 2.0 更新
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+  <section class="comment">
+      <div class="ds-thread">
+          <!-- 来必力City版安装代码 -->
+          <div id="lv-container" data-id="city" data-uid="MTAyMC8zOTczOC8xNjI2NQ==">
+              <script type="text/javascript">
+                  (function (d, s) {
+                      var j, e = d.getElementsByTagName(s)[0];
+  
+                      if (typeof LivereTower === 'function') { return; }
+  
+                      j = d.createElement(s);
+                      j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                      j.async = true;
+  
+                      e.parentNode.insertBefore(j, e);
+                  })(document, 'script');
+              </script>
+              <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
+          </div>
+          <!-- City版安装代码已完成 -->
+      </div>
+  </section>
+  
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%86%99%E5%A4%9A%E8%AF%BB"><span class="toc-number">3.1.</span> <span class="toc-text">一写多读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%AD%E7%82%B9%E7%BB%AD%E8%AF%BB"><span class="toc-number">3.2.</span> <span class="toc-text">断点续读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%BD%AE%E4%BD%8D%E7%82%B9"><span class="toc-number">3.3.</span> <span class="toc-text">重置位点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE-position-%E9%87%8D%E7%BD%AE-%E6%8E%A8%E8%8D%90"><span class="toc-number">3.3.1.</span> <span class="toc-text">根据 position 重置 (推荐)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%97%B6%E9%97%B4%E6%88%B3%E9%87%8D%E7%BD%AE%EF%BC%88%E6%8E%A2%E7%B4%A2%E9%98%B6%E6%AE%B5%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">根据时间戳重置（探索阶段）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0-IPC-%E9%80%9A%E4%BF%A1"><span class="toc-number">4.</span> <span class="toc-text">本地 IPC 通信</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E5%B0%BE"><span class="toc-number">5.</span> <span class="toc-text">结尾</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/C/" title="C#">C#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/DevOps/" title="DevOps">DevOps<sup>2</sup></a></li>
+		
+			<li><a href="/tags/MDQ/" title="MDQ">MDQ<sup>6</sup></a></li>
+		
+			<li><a href="/tags/MDQ-2-0-杂记/" title="MDQ 2.0 杂记">MDQ 2.0 杂记<sup>3</sup></a></li>
+		
+			<li><a href="/tags/Mybatis-Dynamic-Query/" title="Mybatis Dynamic Query">Mybatis Dynamic Query<sup>25</sup></a></li>
+		
+			<li><a href="/tags/Other/" title="Other">Other<sup>1</sup></a></li>
+		
+			<li><a href="/tags/TiDB/" title="TiDB">TiDB<sup>4</sup></a></li>
+		
+			<li><a href="/tags/c/" title="c#">c#<sup>1</sup></a></li>
+		
+			<li><a href="/tags/centos7/" title="centos7">centos7<sup>1</sup></a></li>
+		
+			<li><a href="/tags/css/" title="css">css<sup>1</sup></a></li>
+		
+			<li><a href="/tags/elasticsearch-Dynamic-Query/" title="elasticsearch Dynamic Query">elasticsearch Dynamic Query<sup>2</sup></a></li>
+		
+			<li><a href="/tags/java/" title="java">java<sup>33</sup></a></li>
+		
+			<li><a href="/tags/jmeter/" title="jmeter">jmeter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/linq/" title="linq">linq<sup>1</sup></a></li>
+		
+			<li><a href="/tags/local-queue/" title="local-queue">local-queue<sup>1</sup></a></li>
+		
+			<li><a href="/tags/otter/" title="otter">otter<sup>2</sup></a></li>
+		
+			<li><a href="/tags/sonarqube/" title="sonarqube">sonarqube<sup>2</sup></a></li>
+		
+			<li><a href="/tags/swagger/" title="swagger">swagger<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tk-mybatis-mapper/" title="tk.mybatis.mapper">tk.mybatis.mapper<sup>1</sup></a></li>
+		
+			<li><a href="/tags/ts-dynamic-query/" title="ts-dynamic-query">ts-dynamic-query<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m wz2cool in Github. <br/>
+			No pains, No gains.</p>
+	</section>
+	 
+	<div class="social-font clearfix">
+		
+		
+		
+		<a href="https://github.com/wz2cool" target="_blank" title="github"></a>
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2025 
+		
+		<a href="https://wz2cool.github.io" target="_blank" title="wz2cool">wz2cool</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script src="https://buttons.github.io/buttons.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
